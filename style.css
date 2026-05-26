@@ -1,0 +1,136 @@
+:root {
+    --gold: #C9A84C;
+    --ink: #0D0D0D;
+    --ink-soft: #1A1A1A;
+    --paper: #F7F3EC;
+    --text-muted: #7A6E60;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background-color: #0D0D0D !important; color: #F7F3EC !important; font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; padding: 4rem 2rem; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.12) 0%, transparent 70%); pointer-events: none; }
+  .eye-symbol { width: 90px; height: 45px; margin-bottom: 2.5rem; }
+  .eye-symbol svg { width: 100%; height: 100%; }
+  .hero-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.5rem; font-weight: 500; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 400; line-height: 1.05; color: #F7F3EC; margin-bottom: 1rem; letter-spacing: -1px; }
+  .hero h1 em { font-style: italic; color: #C9A84C; }
+  .hero-sub { font-size: clamp(14px, 2vw, 17px); color: #7A6E60; max-width: 460px; margin: 0 auto 3rem; font-weight: 300; line-height: 1.8; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #7A6E60; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, #C9A84C, transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:.4}50%{opacity:1} }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 100; background: rgba(13,13,13,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 1.5rem; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 0; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-brand { font-family: 'Playfair Display', serif; font-size: 15px; color: #C9A84C; white-space: nowrap; padding: 1.1rem 1.2rem 1.1rem 0; margin-right: 0.8rem; border-right: 1px solid rgba(201,168,76,0.2); }
+  .nav-link { color: #7A6E60; text-decoration: none; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 1.1rem 0.75rem; white-space: nowrap; transition: color 0.2s; font-weight: 400; }
+  .nav-link:hover { color: #C9A84C; }
+
+  /* SECTIONS */
+  .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-header { margin-bottom: 3rem; }
+  .section-number { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #C9A84C; font-weight: 500; margin-bottom: 0.75rem; display: block; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 400; color: #F7F3EC; line-height: 1.15; margin-bottom: 0.75rem; }
+  .section-intro { font-size: 15px; color: #7A6E60; max-width: 580px; line-height: 1.8; }
+  .divider { width: 50px; height: 1px; background: linear-gradient(to right, #C9A84C, transparent); margin: 1.5rem 0; }
+  .section-sep { max-width: 1200px; margin: 0 auto; padding: 0 2rem; border-top: 1px solid rgba(201,168,76,0.08); }
+
+  /* CARDS GRID */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); }
+  .card { background: #1A1A1A; transition: background 0.2s; display: flex; flex-direction: column; }
+  .card:hover { background: #1f1f1f; }
+  .card-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  .card-icon-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+  .card-icon-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 14px; flex-shrink: 0; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 18px; color: #F7F3EC; font-weight: 400; }
+  .card-subtitle { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.85rem; font-weight: 500; margin-top: 2px; }
+  .card-body { font-size: 14px; color: #7A6E60; line-height: 1.8; margin-bottom: 1rem; flex: 1; }
+  .card-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 9px 13px; line-height: 1.7; margin-bottom: 1rem; }
+  .card-tip strong { color: #C9A84C; font-weight: 500; }
+  .maps-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #C9A84C; text-decoration: none; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; padding: 7px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 2px; transition: all 0.2s; margin-top: auto; width: fit-content; }
+  .maps-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.5); }
+  .maps-btn i { font-size: 13px; }
+
+  .badge { display: inline-block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; margin-bottom: 0.85rem; font-weight: 500; }
+  .badge-free { background: rgba(43,74,63,0.4); color: #7EC8AD; border: 1px solid rgba(126,200,173,0.2); }
+  .badge-paid { background: rgba(201,168,76,0.1); color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); }
+  .badge-hidden { background: rgba(100,80,180,0.15); color: #B8A8E8; border: 1px solid rgba(184,168,232,0.2); }
+  .badge-night { background: rgba(30,20,60,0.6); color: #9B8FD4; border: 1px solid rgba(155,143,212,0.2); }
+
+  /* RESTAURANT SECTION */
+  .restaurant-categories { display: flex; flex-direction: column; gap: 2.5rem; }
+  .rest-category-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #C9A84C; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+  .rest-category-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.15); }
+  .rest-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); }
+  .rest-card { background: #1A1A1A; padding: 1.5rem; transition: background 0.2s; display: flex; flex-direction: column; gap: 0.5rem; }
+  .rest-card:hover { background: #1f1f1f; }
+  .rest-header { display: flex; align-items: center; gap: 10px; }
+  .rest-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 14px; flex-shrink: 0; }
+  .rest-name { font-family: 'Playfair Display', serif; font-size: 17px; color: #F7F3EC; font-weight: 400; }
+  .rest-location { font-size: 11px; color: #C9A84C; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
+  .rest-desc { font-size: 14px; color: #7A6E60; line-height: 1.8; }
+  .rest-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 8px 12px; line-height: 1.7; }
+  .rest-tip strong { color: #C9A84C; font-weight: 500; }
+
+  /* TRANSPORT SECTION */
+  .transport-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); margin-bottom: 2rem; }
+  .transport-card { background: #1A1A1A; padding: 1.75rem; transition: background 0.2s; }
+  .transport-card:hover { background: #1f1f1f; }
+  .transport-icon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .transport-icon { width: 42px; height: 42px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 18px; flex-shrink: 0; }
+  .transport-name { font-family: 'Playfair Display', serif; font-size: 19px; color: #F7F3EC; font-weight: 400; }
+  .transport-tag { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 2px; }
+  .transport-body { font-size: 14px; color: #7A6E60; line-height: 1.8; margin-bottom: 1rem; }
+  .transport-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 9px 13px; line-height: 1.7; }
+  .transport-tip strong { color: #C9A84C; font-weight: 500; }
+
+  /* TRAM SPOTLIGHT */
+  .tram-spotlight { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.18); border-radius: 2px; padding: 2rem 2.5rem; margin-top: 2rem; }
+  .tram-spotlight-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; }
+  .tram-spotlight-icon { width: 50px; height: 50px; border-radius: 50%; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 22px; }
+  .tram-spotlight-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #F7F3EC; font-weight: 400; }
+  .tram-spotlight-sub { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+  .tram-body { font-size: 14px; color: #7A6E60; line-height: 1.9; margin-bottom: 1.25rem; }
+  .tram-history { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+  .tram-year { background: rgba(13,13,13,0.6); border: 1px solid rgba(201,168,76,0.12); padding: 0.9rem 1.1rem; }
+  .tram-year-num { font-family: 'Playfair Display', serif; font-size: 22px; color: #C9A84C; font-weight: 400; }
+  .tram-year-desc { font-size: 13px; color: #7A6E60; line-height: 1.6; margin-top: 3px; }
+
+  /* DONATION */
+  .donation-section { background: linear-gradient(135deg, #0D0D0D 0%, #141208 50%, #0D0D0D 100%); border-top: 1px solid rgba(201,168,76,0.2); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 6rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .donation-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%); pointer-events: none; }
+  .donation-inner { max-width: 700px; margin: 0 auto; position: relative; }
+  .donation-eye { font-size: 40px; margin-bottom: 1.5rem; display: block; }
+  .donation-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: #F7F3EC; margin-bottom: 1rem; font-weight: 400; }
+  .donation-subtitle { font-size: 16px; color: #7A6E60; line-height: 1.8; margin-bottom: 3rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .donation-methods { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .donation-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 2rem 2.5rem; flex: 1; max-width: 260px; transition: all 0.25s; }
+  .donation-card:hover { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.4); transform: translateY(-2px); }
+  .donation-card-icon { font-size: 28px; margin-bottom: 1rem; display: block; }
+  .donation-card-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #C9A84C; margin-bottom: 0.5rem; font-weight: 500; }
+  .donation-card-value { font-family: 'Playfair Display', serif; font-size: 17px; color: #F7F3EC; margin-bottom: 1.25rem; }
+  .qr-placeholder { width: 120px; height: 120px; margin: 0 auto; background: #FFFFFF; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+  .donation-note { font-size: 13px; color: #7A6E60; margin-top: 2rem; font-style: italic; }
+
+  /* FOOTER */
+  footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 20px; color: #C9A84C; margin-bottom: 0.5rem; }
+  .footer-sub { font-size: 12px; color: #7A6E60; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* FADE IN */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 600px) {
+    .cards, .rest-cards, .transport-grid { grid-template-columns: 1fr; }
+    .donation-methods { flex-direction: column; align-items: center; }
+    .donation-card { max-width: 100%; width: 100%; }
+    .nav-brand { display: none; }
+    .tram-history { grid-template-columns: 1fr 1fr; }
+  }
