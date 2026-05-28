@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eye of Porto — See the city like a local</title>
+
+
+
+
+<style>
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background-color: #0D0D0D !important; color: #F7F3EC !important; font-family: Arial, Helvetica, sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+
+  /* LANGUAGE SWITCHER */
+  .lang-bar { background: rgba(201,168,76,0.06); border-bottom: 1px solid rgba(201,168,76,0.12); padding: 0.5rem 1.5rem; display: flex; justify-content: flex-end; align-items: center; gap: 6px; max-width: 100%; }
+  .lang-btn { background: none; border: 1px solid transparent; color: #7A6E60; font-size: 12px; padding: 4px 10px; cursor: pointer; font-family: Arial,sans-serif; letter-spacing: 1px; border-radius: 2px; transition: all 0.2s; }
+  .lang-btn:hover { color: #C9A84C; border-color: rgba(201,168,76,0.3); }
+  .lang-btn.active { color: #C9A84C; border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.08); }
+  [data-lang] { transition: opacity 0.2s; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; padding: 4rem 2rem; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.12) 0%, transparent 70%); pointer-events: none; }
+  .eye-symbol { width: 90px; height: 45px; margin-bottom: 2.5rem; }
+  .eye-symbol svg { width: 100%; height: 100%; }
+  .hero-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #C9A84C; margin-bottom: 1.5rem; font-weight: 500; }
+  .hero h1 { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 400; line-height: 1.05; color: #F7F3EC; margin-bottom: 1rem; letter-spacing: -1px; }
+  .hero h1 em { font-style: italic; color: #C9A84C; }
+  .hero-sub { font-size: clamp(14px, 2vw, 17px); color: #7A6E60; max-width: 460px; margin: 0 auto 3rem; font-weight: 300; line-height: 1.8; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #7A6E60; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, #C9A84C, transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:.4}50%{opacity:1} }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 100; background: rgba(13,13,13,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 1.5rem; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 0; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-brand { font-family: Georgia, 'Times New Roman', serif; font-size: 15px; color: #C9A84C; white-space: nowrap; padding: 1.1rem 1.2rem 1.1rem 0; margin-right: 0.8rem; border-right: 1px solid rgba(201,168,76,0.2); }
+  .nav-link { color: #7A6E60; text-decoration: none; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 1.1rem 0.75rem; white-space: nowrap; transition: color 0.2s; font-weight: 400; }
+  .nav-link:hover { color: #C9A84C; }
+
+  /* SECTIONS */
+  .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-header { margin-bottom: 3rem; }
+  .section-number { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #C9A84C; font-weight: 500; margin-bottom: 0.75rem; display: block; }
+  .section-title { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 400; color: #F7F3EC; line-height: 1.15; margin-bottom: 0.75rem; }
+  .section-intro { font-size: 15px; color: #7A6E60; max-width: 580px; line-height: 1.8; }
+  .divider { width: 50px; height: 1px; background: linear-gradient(to right, #C9A84C, transparent); margin: 1.5rem 0; }
+  .section-sep { max-width: 1200px; margin: 0 auto; padding: 0 2rem; border-top: 1px solid rgba(201,168,76,0.08); }
+
+  /* CARDS GRID */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); }
+  .card { background: #1A1A1A; transition: background 0.2s; display: flex; flex-direction: column; }
+  .card:hover { background: #1f1f1f; }
+  .card-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+  .card-icon-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+  .card-icon-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 14px; flex-shrink: 0; }
+  .card-title { font-family: Georgia, 'Times New Roman', serif; font-size: 18px; color: #F7F3EC; font-weight: 400; }
+  .card-subtitle { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.85rem; font-weight: 500; margin-top: 2px; }
+  .card-body { font-size: 14px; color: #7A6E60; line-height: 1.8; margin-bottom: 1rem; flex: 1; }
+  .card-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 9px 13px; line-height: 1.7; margin-bottom: 1rem; }
+  .card-tip strong { color: #C9A84C; font-weight: 500; }
+  .maps-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #C9A84C; text-decoration: none; letter-spacing: 1px; text-transform: uppercase; font-weight: 500; padding: 7px 12px; border: 1px solid rgba(201,168,76,0.25); border-radius: 2px; transition: all 0.2s; margin-top: auto; width: fit-content; }
+  .maps-btn:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.5); }
+  .maps-btn i { font-size: 13px; }
+
+  .badge { display: inline-block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; margin-bottom: 0.85rem; font-weight: 500; }
+  .badge-free { background: rgba(43,74,63,0.4); color: #7EC8AD; border: 1px solid rgba(126,200,173,0.2); }
+  .badge-paid { background: rgba(201,168,76,0.1); color: #C9A84C; border: 1px solid rgba(201,168,76,0.2); }
+  .badge-hidden { background: rgba(100,80,180,0.15); color: #B8A8E8; border: 1px solid rgba(184,168,232,0.2); }
+  .badge-night { background: rgba(30,20,60,0.6); color: #9B8FD4; border: 1px solid rgba(155,143,212,0.2); }
+
+
+  /* RESTAURANT LIST */
+  .rest-list { border: 1px solid rgba(201,168,76,0.1); }
+  .rest-item { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.25rem; background: #1A1A1A; text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.06); transition: background 0.2s; }
+  .rest-item:last-child { border-bottom: none; }
+  .rest-item:hover { background: #222; }
+  .rest-item-name { font-size: 15px; color: #F7F3EC; font-weight: 400; }
+  .rest-item-map { font-size: 12px; color: #C9A84C; letter-spacing: 1px; }
+
+  /* RESTAURANT SECTION */
+  .restaurant-categories { display: flex; flex-direction: column; gap: 2.5rem; }
+  .rest-category-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #C9A84C; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+  .rest-category-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.15); }
+  .rest-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); }
+  .rest-card { background: #1A1A1A; padding: 1.5rem; transition: background 0.2s; display: flex; flex-direction: column; gap: 0.5rem; }
+  .rest-card:hover { background: #1f1f1f; }
+  .rest-header { display: flex; align-items: center; gap: 10px; }
+  .rest-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 14px; flex-shrink: 0; }
+  .rest-name { font-family: Georgia, 'Times New Roman', serif; font-size: 17px; color: #F7F3EC; font-weight: 400; }
+  .rest-location { font-size: 11px; color: #C9A84C; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
+  .rest-desc { font-size: 14px; color: #7A6E60; line-height: 1.8; }
+  .rest-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 8px 12px; line-height: 1.7; }
+  .rest-tip strong { color: #C9A84C; font-weight: 500; }
+
+  /* TRANSPORT SECTION */
+  .transport-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.08); margin-bottom: 2rem; }
+  .transport-card { background: #1A1A1A; padding: 1.75rem; transition: background 0.2s; }
+  .transport-card:hover { background: #1f1f1f; }
+  .transport-icon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .transport-icon { width: 42px; height: 42px; border-radius: 50%; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 18px; flex-shrink: 0; }
+  .transport-name { font-family: Georgia, 'Times New Roman', serif; font-size: 19px; color: #F7F3EC; font-weight: 400; }
+  .transport-tag { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-top: 2px; }
+  .transport-body { font-size: 14px; color: #7A6E60; line-height: 1.8; margin-bottom: 1rem; }
+  .transport-tip { font-size: 13px; color: #F7F3EC; background: rgba(201,168,76,0.07); border-left: 2px solid #C9A84C; padding: 9px 13px; line-height: 1.7; }
+  .transport-tip strong { color: #C9A84C; font-weight: 500; }
+
+  /* TRAM SPOTLIGHT */
+  .tram-spotlight { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.18); border-radius: 2px; padding: 2rem 2.5rem; margin-top: 2rem; }
+  .tram-spotlight-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; }
+  .tram-spotlight-icon { width: 50px; height: 50px; border-radius: 50%; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); display: flex; align-items: center; justify-content: center; color: #C9A84C; font-size: 22px; }
+  .tram-spotlight-title { font-family: Georgia, 'Times New Roman', serif; font-size: 22px; color: #F7F3EC; font-weight: 400; }
+  .tram-spotlight-sub { font-size: 11px; color: #C9A84C; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+  .tram-body { font-size: 14px; color: #7A6E60; line-height: 1.9; margin-bottom: 1.25rem; }
+  .tram-history { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+  .tram-year { background: rgba(13,13,13,0.6); border: 1px solid rgba(201,168,76,0.12); padding: 0.9rem 1.1rem; }
+  .tram-year-num { font-family: Georgia, 'Times New Roman', serif; font-size: 22px; color: #C9A84C; font-weight: 400; }
+  .tram-year-desc { font-size: 13px; color: #7A6E60; line-height: 1.6; margin-top: 3px; }
+
+  /* DONATION */
+  .donation-section { background: linear-gradient(135deg, #0D0D0D 0%, #141208 50%, #0D0D0D 100%); border-top: 1px solid rgba(201,168,76,0.2); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 6rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .donation-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%); pointer-events: none; }
+  .donation-inner { max-width: 700px; margin: 0 auto; position: relative; }
+  .donation-eye { font-size: 40px; margin-bottom: 1.5rem; display: block; }
+  .donation-title { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: #F7F3EC; margin-bottom: 1rem; font-weight: 400; }
+  .donation-subtitle { font-size: 16px; color: #7A6E60; line-height: 1.8; margin-bottom: 3rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .donation-methods { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .donation-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 2rem 2.5rem; flex: 1; max-width: 260px; transition: all 0.25s; }
+  .donation-card:hover { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.4); transform: translateY(-2px); }
+  .donation-card-icon { font-size: 28px; margin-bottom: 1rem; display: block; }
+  .donation-card-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #C9A84C; margin-bottom: 0.5rem; font-weight: 500; }
+  .donation-card-value { font-family: Georgia, 'Times New Roman', serif; font-size: 17px; color: #F7F3EC; margin-bottom: 1.25rem; }
+  .qr-placeholder { width: 120px; height: 120px; margin: 0 auto; background: #FFFFFF; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+  .donation-note { font-size: 13px; color: #7A6E60; margin-top: 2rem; font-style: italic; }
+
+  /* FOOTER */
+  footer { padding: 3rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
+  .footer-brand { font-family: Georgia, 'Times New Roman', serif; font-size: 20px; color: #C9A84C; margin-bottom: 0.5rem; }
+  .footer-sub { font-size: 12px; color: #7A6E60; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* FADE IN */
+  .fade-in { opacity: 1; transform: translateY(0); }
+  
+
+  @media (max-width: 600px) {
+    .cards, .rest-cards, .transport-grid { grid-template-columns: 1fr; }
+    .donation-methods { flex-direction: column; align-items: center; }
+    .donation-card { max-width: 100%; width: 100%; }
+    .nav-brand { display: none; }
+    .tram-history { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eye-symbol">
+    <svg viewBox="0 0 90 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 22.5C5 22.5 20 5 45 5C70 5 85 22.5 85 22.5C85 22.5 70 40 45 40C20 40 5 22.5 5 22.5Z" stroke="#C9A84C" stroke-width="1.5" fill="none"/>
+      <circle cx="45" cy="22.5" r="10" stroke="#C9A84C" stroke-width="1.5" fill="none"/>
+      <circle cx="45" cy="22.5" r="4" fill="#C9A84C"/>
+    </svg>
+  </div>
+  <span class="hero-label">Porto · Portugal</span>
+  <h1>Eye of<br><em>Porto</em></h1>
+  <p class="hero-sub">The city as only a local sees it — the hidden spots, real flavours, and secrets that no guidebook will ever tell you.</p>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Explore</span>
+  </div>
+</section>
+
+
+<!-- LANGUAGE BAR -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')">🇬🇧 EN</button>
+  <button class="lang-btn" onclick="setLang('pt')">🇵🇹 PT</button>
+  <button class="lang-btn" onclick="setLang('es')">🇪🇸 ES</button>
+  <button class="lang-btn" onclick="setLang('fr')">🇫🇷 FR</button>
+  <button class="lang-btn" onclick="setLang('de')">🇩🇪 DE</button>
+  <button class="lang-btn" onclick="setLang('it')">🇮🇹 IT</button>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Eye of Porto</div>
+    <a class="nav-link" href="#historia"><span class="nav-text">🏛</span><span class="nav-text">History</span></a>
+    <a class="nav-link" href="#gastronomia"><span class="nav-text">🍽</span><span class="nav-text">Food</span></a>
+    <a class="nav-link" href="#restaurantes"><span class="nav-text">🍴</span><span class="nav-text">Restaurants</span></a>
+    <a class="nav-link" href="#miradouros"><span class="nav-text">🔭</span><span class="nav-text">Views</span></a>
+    <a class="nav-link" href="#mercados"><span class="nav-text">🛒</span><span class="nav-text">Markets</span></a>
+    <a class="nav-link" href="#natureza"><span class="nav-text">🌿</span><span class="nav-text">Nature</span></a>
+    <a class="nav-link" href="#cultura"><span class="nav-text">🎭</span><span class="nav-text">Culture</span></a>
+    <a class="nav-link" href="#segredos"><span class="nav-text">👁</span><span class="nav-text">Secrets</span></a>
+    <a class="nav-link" href="#noturno"><span class="nav-text">🌙</span><span class="nav-text">Nightlife</span></a>
+    <a class="nav-link" href="#transportes"><span class="nav-text">🚆</span><span class="nav-text">Transport</span></a>
+    <a class="nav-link" href="#donate"><span class="nav-text">♥</span><span class="nav-text">Support</span></a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════ -->
+<!-- 01 · HISTORY -->
+<!-- ══════════════════════════════════ -->
+<div id="historia">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">01 · History</span>
+    <h2 class="section-title">2000 years<br>open to the sky</h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto is not just beautiful — it's a living book. Roman roots, Baroque gold, and azulejo walls that tell stories most visitors walk past without reading.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🏛</div>
+          <div>
+            <div class="card-title">Sé Catedral</div>
+            <div class="card-subtitle">Ribeira · 12th century</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Cloisters paid entry</span>
+        <p class="card-body" data-i18n="cb0">The oldest cathedral in the city. From the staircase outside you get one of the finest views over the Ribeira. The cloisters inside are covered in blue and white azulejos worth every cent.</p>
+        <div class="card-tip" data-i18n="ct0"><strong>Local tip:</strong> Go before 10am — at that hour it's almost only residents passing by.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Sé+Catedral+do+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">📚</div>
+          <div>
+            <div class="card-title">Livraria Lello</div>
+            <div class="card-subtitle">Bairro das Letras · early 20th c.</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Ticket discounted on purchase</span>
+        <p class="card-body" data-i18n="cb0">One of the most beautiful bookshops in the world — a spiral staircase and magnificent stained glass that inspired J.K. Rowling. Go, but avoid weekend afternoons.</p>
+        <div class="card-tip" data-i18n="ct1"><strong>Local tip:</strong> Your entry ticket discounts off any book purchase — bring home something by a Portuguese author.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Livraria+Lello+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🚆</div>
+          <div>
+            <div class="card-title">São Bento Station</div>
+            <div class="card-subtitle">City centre · 20th century</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">20,000 azulejo tiles narrating the history of Portugal. A train station that is simultaneously a museum. Even if you catch no train at all, walk in.</p>
+        <div class="card-tip" data-i18n="ct2"><strong>Local tip:</strong> Look up. Most people photograph the main hall and never notice the details of the ceiling.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Estação+de+São+Bento+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">⛪</div>
+          <div>
+            <div class="card-title">Igreja de São Francisco</div>
+            <div class="card-subtitle">Ribeira · 14th–17th century</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Entry includes catacombs</span>
+        <p class="card-body" data-i18n="cb0">The most gilded interior you will ever see — 400 kg of Baroque gold. The catacombs beneath still have bones on display. Not for everyone, but absolutely unforgettable.</p>
+        <div class="card-tip" data-i18n="ct3"><strong>Local tip:</strong> Combine with the Sé visit — 5 minutes apart on foot.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Igreja+de+São+Francisco+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🏛</div>
+          <div>
+            <div class="card-title">Igreja do Carmo</div>
+            <div class="card-subtitle">City centre · 18th century</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">One of Porto's most photogenic facades — entirely covered in azulejos on the side wall. Standing between two churches that share a single wall, it's an architectural curiosity unlike anything else in the city.</p>
+        <div class="card-tip" data-i18n="ct4"><strong>Local tip:</strong> Best photographed from across the street in the late afternoon when the tiles glow.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Igreja+do+Carmo+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 02 · GASTRONOMY -->
+<!-- ══════════════════════════════════ -->
+<div id="gastronomia">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">02 · Gastronomy</span>
+    <h2 class="section-title">Eat where<br><em>locals eat</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Eating in Porto is an experience on its own. Forget the pretty-fronted restaurants on the Ribeira — go where the locals go.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🥪</div>
+          <div>
+            <div class="card-title">Francesinha</div>
+            <div class="card-subtitle">Porto's iconic dish</div>
+          </div>
+        </div>
+        <p class="card-body" data-i18n="cb0">The queen of Porto cuisine. Bread, mixed meats, ham, chouriço, melted cheese and a beer-tomato sauce poured on top. Often served with fries underneath. Heavy, indulgent, mandatory.</p>
+        <div class="card-tip" data-i18n="ct5"><strong>Where to eat:</strong> Café Santiago (Rua Passos Manuel) — queue outside, worth every minute.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🐟</div>
+          <div>
+            <div class="card-title">Bacalhau à Gomes de Sá</div>
+            <div class="card-subtitle">Invented right here in Porto</div>
+          </div>
+        </div>
+        <p class="card-body" data-i18n="cb0">Invented in Porto in the 19th century. Flaked salt cod with potatoes, onion, olive oil and boiled egg. Pure comfort food — the dish Porto people eat when they miss home.</p>
+        <div class="card-tip" data-i18n="ct6"><strong>Local tip:</strong> Look for small tascas in Miragaia or Bonfim — honest prices and family recipes.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">☕</div>
+          <div>
+            <div class="card-title">Pastel de Nata + Coffee</div>
+            <div class="card-subtitle">The right way to start the day</div>
+          </div>
+        </div>
+        <p class="card-body" data-i18n="cb0">In Porto, coffee isn't a "bica" — ask for a <em>cimbalino</em>. That's the local name and it tells them you know. Pair it with a pastel de nata from any neighbourhood bakery.</p>
+        <div class="card-tip" data-i18n="ct7"><strong>Local tip:</strong> Padaria Ribeiro (Cedofeita) or any neighbourhood bakery — no famous place needed.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🍷</div>
+          <div>
+            <div class="card-title">Porto Wine</div>
+            <div class="card-subtitle">The caves of Gaia</div>
+          </div>
+        </div>
+        <p class="card-body" data-i18n="cb0">Technically produced in Vila Nova de Gaia just across the river. Sandeman, Graham's, Ramos Pinto — guided cave tours with tastings included. Absolutely worth it.</p>
+        <div class="card-tip" data-i18n="ct8"><strong>Local tip:</strong> Go at dusk — the light over the Douro with a glass in hand is very hard to beat.</div>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🥖</div>
+          <div>
+            <div class="card-title">Bifanas</div>
+            <div class="card-subtitle">Street food · Porto classic</div>
+          </div>
+        </div>
+        <p class="card-body" data-i18n="cb0">Marinated pork in a crusty roll, soaked in a garlicky sauce. Porto's ultimate street food — cheap, fast, and absolutely addictive. The kind of thing you eat standing at a counter and immediately want another.</p>
+        <div class="card-tip" data-i18n="ct9"><strong>Where to eat:</strong> Casa das Bifanas or Cervejaria Gazela — both Porto institutions that have been doing this for decades.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 03 · RESTAURANTS -->
+<!-- ══════════════════════════════════ -->
+<div id="restaurantes">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">03 · Restaurants</span>
+    <h2 class="section-title">Where to<br><em>sit and eat</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Hand-picked by a local. Places with soul — honest food, real atmosphere.</p>
+  </div>
+
+  <div class="restaurant-categories">
+
+    <!-- FRANCESINHAS -->
+    <div>
+      <div class="rest-category-label">🥪 &nbsp;Francesinhas</div>
+      <div class="rest-list">
+        <a class="rest-item" href="https://maps.google.com/?q=Santa+Francesinha+Porto" target="_blank"><span class="rest-item-name">Santa Francesinha</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Francesinha+Café+Porto" target="_blank"><span class="rest-item-name">Francesinha Café</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=O+Afonso+francesinha+Porto" target="_blank"><span class="rest-item-name">O Afonso</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Yuko+Tavern+Porto" target="_blank"><span class="rest-item-name">Yuko Tavern</span><span class="rest-item-map">📍 Maps</span></a>
+      </div>
+    </div>
+
+    <!-- COMIDA TRADICIONAL -->
+    <div>
+      <div class="rest-category-label">🍲 &nbsp;Comida Tradicional Portuguesa</div>
+      <div class="rest-list">
+        <a class="rest-item" href="https://maps.google.com/?q=Solar+Moinho+de+Vento+Porto" target="_blank"><span class="rest-item-name">Solar Moinho de Vento</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Mário+Luso+Porto" target="_blank"><span class="rest-item-name">Mário Luso</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Emotivo+restaurante+Porto" target="_blank"><span class="rest-item-name">Emotivo</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=O+Rápido+restaurante+Porto" target="_blank"><span class="rest-item-name">O Rápido</span><span class="rest-item-map">📍 Maps</span></a>
+      </div>
+    </div>
+
+    <!-- TASCAS -->
+    <div>
+      <div class="rest-category-label">🍷 &nbsp;Tascas Portuenses</div>
+      <div class="rest-list">
+        <a class="rest-item" href="https://maps.google.com/?q=Adega+Regional+da+Areosa+Porto" target="_blank"><span class="rest-item-name">Adega Regional da Areosa</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Guindalense+Porto" target="_blank"><span class="rest-item-name">Guindalense</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Cervejaria+Gazela+Porto" target="_blank"><span class="rest-item-name">Cervejaria Gazela</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=A+Badalhoca+Porto" target="_blank"><span class="rest-item-name">A Badalhoca</span><span class="rest-item-map">📍 Maps</span></a>
+        <a class="rest-item" href="https://maps.google.com/?q=Casa+das+Bifanas+Porto" target="_blank"><span class="rest-item-name">Casa das Bifanas</span><span class="rest-item-map">📍 Maps</span></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 04 · VIEWS -->
+<!-- ══════════════════════════════════ -->
+<div id="miradouros">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">04 · Viewpoints</span>
+    <h2 class="section-title">The city<br><em>from above</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto is a city of hills — spectacular views at every turn. Here are the ones that truly earn the climb.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">👁</div>
+          <div>
+            <div class="card-title">Serra do Pilar</div>
+            <div class="card-subtitle">Gaia · best view of Porto</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">From the other side of the river, in Gaia, you get the most iconic view of Porto — the Ribeira, the bridges, the full Douro. The best photo of Porto is taken outside Porto.</p>
+        <div class="card-tip" data-i18n="ct10"><strong>Local tip:</strong> Sunset here is magic. Bring wine and sit on the convent steps.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Miradouro+Serra+do+Pilar+Gaia" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🗼</div>
+          <div>
+            <div class="card-title">Torre dos Clérigos</div>
+            <div class="card-subtitle">City centre · 360° view</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Paid climb</span>
+        <p class="card-body" data-i18n="cb0">225 granite steps and at the top you have Porto in all 360°. The symbol of the city, built in the 18th century. At dusk the sky turns orange over the rooftops.</p>
+        <div class="card-tip" data-i18n="ct11"><strong>Local tip:</strong> Not worth it in rain — the mist covers everything. Pick a clear day.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Torre+dos+Clérigos+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🌳</div>
+          <div>
+            <div class="card-title">Jardins do Palácio de Cristal</div>
+            <div class="card-subtitle">Massarelos · romantic</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">Magnificent gardens with views over the Douro and its mouth. Peacocks wander freely. Perfect for an unhurried walk, especially in the morning or late afternoon.</p>
+        <div class="card-tip" data-i18n="ct12"><strong>Local tip:</strong> Explore beyond the main lawn — hidden fountains and secluded corners most tourists never find.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Jardins+Palácio+de+Cristal+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🪜</div>
+          <div>
+            <div class="card-title">Escadas do Guindais</div>
+            <div class="card-subtitle">Batalha → Ribeira on foot</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">Walk down the Guindais steps — a steep descent with the Ribeira slowly opening up before you. You arrive right at the river's edge. Better than any cable car.</p>
+        <div class="card-tip" data-i18n="ct13"><strong>Local tip:</strong> Walk up from the bottom for the best photo angle — the Sé appears in the background.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Escadas+do+Guindais+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 05 · MARKETS & SHOPPING -->
+<!-- ══════════════════════════════════ -->
+<div id="mercados">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">05 · Markets & Shopping</span>
+    <h2 class="section-title">Where the city<br><em>has a pulse</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">From century-old stalls to modern food halls and the city's best shopping. Markets are where the real Porto lives.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🧺</div>
+          <div>
+            <div class="card-title">Mercado do Bolhão</div>
+            <div class="card-subtitle">City centre · traditional</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">The historic market par excellence — recently restored. Fruit, fish, flowers, cheeses, charcuterie. The stall ladies still call you "menino" and "amor". A human experience before it's a tourist one.</p>
+        <div class="card-tip" data-i18n="ct14"><strong>Local tip:</strong> Go before 1pm — that's when it's alive.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Mercado+do+Bolhão+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🍽</div>
+          <div>
+            <div class="card-title">Mercado Bom Sucesso</div>
+            <div class="card-subtitle">Boavista · gourmet food hall</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">A renovated market with restaurants and local producers. More polished than Bolhão but high quality. A great lunch stop — petiscos, sushi, burgers and more all in one place.</p>
+        <div class="card-tip" data-i18n="ct15"><strong>Local tip:</strong> The bar at the back has Douro wines at honest prices.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Mercado+Bom+Sucesso+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🛍</div>
+          <div>
+            <div class="card-title">NorteShopping</div>
+            <div class="card-subtitle">Matosinhos · largest mall</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">The biggest shopping centre in the Porto metropolitan area. Over 300 stores, a huge food court, cinema — international brands and Portuguese retailers. If you need anything, it's here.</p>
+        <div class="card-tip" data-i18n="ct16"><strong>Local tip:</strong> Take the Metro Line B — stops right at the door. Parking on weekends is a nightmare.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=NorteShopping+Matosinhos" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🪙</div>
+          <div>
+            <div class="card-title">Feira da Vandoma</div>
+            <div class="card-subtitle">Saturday mornings · antiques</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">Every Saturday near the Sé — stamps, coins, old azulejos, postcards, vinyl records. A living archive of the city. Wonderfully photogenic.</p>
+        <div class="card-tip" data-i18n="ct17"><strong>Local tip:</strong> Ask the price before showing too much interest — if they see you love it, the price goes up.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Feira+da+Vandoma+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🎨</div>
+          <div>
+            <div class="card-title">Rua de Cedofeita</div>
+            <div class="card-subtitle">Neighbourhood · local commerce</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free entry</span>
+        <p class="card-body" data-i18n="cb0">The most authentic commercial street in Porto. Independent bookshops, design stores, small cafés, artists' ateliers. No chains — everything local. This is where creative Porto lives.</p>
+        <div class="card-tip" data-i18n="ct18"><strong>Local tip:</strong> Enter the perpendicular side streets — courtyards and murals that appear in no guidebook.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Rua+de+Cedofeita+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 06 · NATURE & BEACHES -->
+<!-- ══════════════════════════════════ -->
+<div id="natureza">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">06 · Nature & Beaches</span>
+    <h2 class="section-title">Sea, river<br><em>and green</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto is minutes from the Atlantic Ocean, the Douro estuary and some of the greenest parks in Portugal. Most tourists never leave the historic centre — their loss.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🌳</div>
+          <div>
+            <div class="card-title">Parque da Cidade</div>
+            <div class="card-subtitle">Foz · largest urban park in Portugal</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">83 hectares of lakes, meadows, forest trails and open space — the largest urban park in Portugal, stretching all the way to the sea. Where Porto people go to breathe.</p>
+        <div class="card-tip" data-i18n="ct19"><strong>Local tip:</strong> Walk through to the beach at Foz do Douro — you exit straight onto the Atlantic. One of the best urban walks in the country.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Parque+da+Cidade+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🏖</div>
+          <div>
+            <div class="card-title">Praias de Vila Nova de Gaia</div>
+            <div class="card-subtitle">Gaia · Atlantic beaches</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">Miramar, Aguda, Granja — beautiful Atlantic beaches just south of Porto. Wilder and less crowded, with dramatic cliffs and traditional fishing villages. The Chapel of Senhor da Pedra at Miramar sits on a rock in the sea.</p>
+        <div class="card-tip" data-i18n="ct20"><strong>Local tip:</strong> Visit the chapel at low tide for the best views and photographs.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Praia+de+Miramar+Vila+Nova+de+Gaia" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🌊</div>
+          <div>
+            <div class="card-title">Matosinhos & Leça Beaches</div>
+            <div class="card-subtitle">Matosinhos · surf & seafood</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">The beaches closest to Porto — easy by Metro. Matosinhos is a surf beach with the best fresh seafood restaurants in the region right behind the sand. Leça da Palmeira has a stunning sea pool by architect Álvaro Siza.</p>
+        <div class="card-tip" data-i18n="ct21"><strong>Local tip:</strong> After the beach, eat grilled fish at Rua Roberto Ivens — whole grilled fish, cold beer, plastic chairs. The real deal.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Praia+de+Matosinhos" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🌱</div>
+          <div>
+            <div class="card-title">Jardim Botânico do Porto</div>
+            <div class="card-subtitle">Bom Pastor · botanical garden</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Small fee</span>
+        <p class="card-body" data-i18n="cb0">The University of Porto's botanical garden — centuries-old trees, exotic plants and a peaceful greenhouse. One of those places that locals forget to mention and tourists never find.</p>
+        <div class="card-tip" data-i18n="ct22"><strong>Local tip:</strong> The garden backs onto a magnificent historic villa. Hard to believe you're 10 minutes from the centre.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Jardim+Botânico+do+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🪶</div>
+          <div>
+            <div class="card-title">Estuário do Douro</div>
+            <div class="card-subtitle">Nature reserve · river mouth</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">The Douro estuary is a protected nature reserve where the river meets the sea. Migratory birds, salt marshes, fishing boats and total silence. A completely different side of Porto.</p>
+        <div class="card-tip" data-i18n="ct23"><strong>Local tip:</strong> In autumn and winter the estuary fills with migratory birds from across Europe and Africa.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Estuário+do+Douro+reserva+natural" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">⚓</div>
+          <div>
+            <div class="card-title">Afurada</div>
+            <div class="card-subtitle">Gaia · fishing village</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Free</span>
+        <p class="card-body" data-i18n="cb0">A traditional fishing village at the mouth of the Douro — minutes from the city but feeling a world away. Nets drying on the ground, boats bobbing, old men playing cards. The Porto that tourism forgot.</p>
+        <div class="card-tip" data-i18n="ct24"><strong>Local tip:</strong> Eat grilled fish at one of the tiny tascas — no menus, they tell you what they caught that day.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Afurada+Vila+Nova+de+Gaia" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🌿</div>
+          <div>
+            <div class="card-title">Parque da Fundação Serralves</div>
+            <div class="card-subtitle">Serralves · art & nature</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Paid entry</span>
+        <p class="card-body" data-i18n="cb0">18 hectares of formally landscaped gardens surrounding the iconic pink Art Deco Casa de Serralves and the world-class Serralves Museum of Contemporary Art.</p>
+        <div class="card-tip" data-i18n="ct25"><strong>Local tip:</strong> First Sunday of each month, entry is free until 1pm — arrive early, locals know this well.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Fundação+Serralves+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 07 · CULTURE -->
+<!-- ══════════════════════════════════ -->
+<div id="cultura">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">07 · Culture & Architecture</span>
+    <h2 class="section-title">The city<br><em>reinventing itself</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto has always mixed the ancient and the bold. These are the spaces where the city's creative identity lives today.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🎵</div>
+          <div>
+            <div class="card-title">Casa da Música</div>
+            <div class="card-subtitle">Boavista · Rem Koolhaas</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Tours available</span>
+        <p class="card-body" data-i18n="cb0">One of the most remarkable concert halls in Europe — designed by Dutch architect Rem Koolhaas, it looks like a chunk of crystal dropped from the sky. Worth visiting for the architecture alone.</p>
+        <div class="card-tip" data-i18n="ct26"><strong>Local tip:</strong> Guided architectural tours are surprisingly affordable. The interiors are as extraordinary as the exterior.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Casa+da+Música+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🍷</div>
+          <div>
+            <div class="card-title">World of Wine (WOW)</div>
+            <div class="card-subtitle">Gaia · cultural & wine district</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Multiple experiences</span>
+        <p class="card-body" data-i18n="cb0">A world-class cultural destination with seven museums covering wine, chocolate, cork, Portuguese textiles and more. Stunning views over the Douro from the terraces.</p>
+        <div class="card-tip" data-i18n="ct27"><strong>Local tip:</strong> Buy a combined ticket for the museums that interest you most, and spend the rest of the time on the terraces with a glass of wine.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=World+of+Wine+WOW+Gaia" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">⚽</div>
+          <div>
+            <div class="card-title">Estádio do Dragão</div>
+            <div class="card-subtitle">Antas · FC Porto</div>
+          </div>
+        </div>
+        <span class="badge badge-paid">Match tickets / tours</span>
+        <p class="card-body" data-i18n="cb0">Home of FC Porto — one of Europe's great football clubs. A match here is electric. The stadium tour is also excellent, with access to the dressing rooms, pitch and trophy room.</p>
+        <div class="card-tip" data-i18n="ct28"><strong>Local tip:</strong> If you can, go to a game. The atmosphere in the Curva Sul is raw, loud, and completely authentic Porto.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Estádio+do+Dragão+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🖼</div>
+          <div>
+            <div class="card-title">Rua de Miguel Bombarda</div>
+            <div class="card-subtitle">Contemporary art street</div>
+          </div>
+        </div>
+        <span class="badge badge-free">Mostly free</span>
+        <p class="card-body" data-i18n="cb0">The heart of contemporary art in Porto. Galleries, ateliers, independent spaces. On the first Friday of each month, openings are public events with wine and the artists present.</p>
+        <div class="card-tip" data-i18n="ct29"><strong>Local tip:</strong> Go on an opening Friday — genuinely Porto, not a tourist event.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Rua+de+Miguel+Bombarda+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 08 · SECRETS -->
+<!-- ══════════════════════════════════ -->
+<div id="segredos">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">08 · Secrets</span>
+    <h2 class="section-title">The Porto<br><em>nobody shows you</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">These are the places locals keep to themselves — that most tourists will never find.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🔍</div>
+          <div>
+            <div class="card-title">Pátio das Virtudes</div>
+            <div class="card-subtitle">Bairro das Virtudes · hidden</div>
+          </div>
+        </div>
+        <span class="badge badge-hidden">Local spot</span>
+        <p class="card-body" data-i18n="cb0">A secret miradouro in the form of a suspended garden, with views over the Douro. Hidden behind a narrow street, locals come here in the late afternoon with a beer and sit on the stone steps.</p>
+        <div class="card-tip" data-i18n="ct30"><strong>Local tip:</strong> No signage. Find "Rua das Virtudes" and follow the sound of conversation.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Pátio+das+Virtudes+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🗺</div>
+          <div>
+            <div class="card-title">Bairro do Barredo</div>
+            <div class="card-subtitle">Ribeira · the medieval labyrinth</div>
+          </div>
+        </div>
+        <span class="badge badge-hidden">Local spot</span>
+        <p class="card-body" data-i18n="cb0">Behind the tourist Ribeira there's a maze of medieval alleyways, hanging laundry, cats and centuries-old houses. The Porto that survived time. Go without a map and get deliberately lost.</p>
+        <div class="card-tip" data-i18n="ct31"><strong>Local tip:</strong> Very steep streets and uneven ground. Comfortable shoes are non-negotiable.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Bairro+do+Barredo+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 09 · NIGHTLIFE -->
+<!-- ══════════════════════════════════ -->
+<div id="noturno">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">09 · Nightlife</span>
+    <h2 class="section-title">Porto after<br><em>dark</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto at night has its own energy. It's not a city that sleeps early — but it's not just clubs either. There's something for everyone.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🎸</div>
+          <div>
+            <div class="card-title">Fado in Porto</div>
+            <div class="card-subtitle">Ribeira / Baixa · late evening</div>
+          </div>
+        </div>
+        <span class="badge badge-night">Evening</span>
+        <p class="card-body" data-i18n="cb0">Porto has its own fado — more rustic and melancholic than Lisbon's. In small venues with low lighting, the atmosphere is completely unlike a tourist performance.</p>
+        <div class="card-tip" data-i18n="ct32"><strong>Where to go:</strong> Casa da Guitarra (R. Santa Catarina) or Café Candelabro — genuine soul, no outrageous minimum spend.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Casa+da+Guitarra+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🍺</div>
+          <div>
+            <div class="card-title">Galerias de Paris</div>
+            <div class="card-subtitle">City centre · bar street</div>
+          </div>
+        </div>
+        <span class="badge badge-night">Night</span>
+        <p class="card-body" data-i18n="cb0">The bar district. Dozens of small bars, terraces, live music in the street. Porto warms up slowly — between 11pm and 1am is the peak. Start early and let the night unfold.</p>
+        <div class="card-tip" data-i18n="ct33"><strong>Local tip:</strong> Avoid the most prominent bars at the entrance — the best ones are on the interior streets.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Rua+Galerias+de+Paris+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">⛵</div>
+          <div>
+            <div class="card-title">Cais de Gaia at Night</div>
+            <div class="card-subtitle">Gaia waterfront · river views</div>
+          </div>
+        </div>
+        <span class="badge badge-night">Night</span>
+        <p class="card-body" data-i18n="cb0">Illuminated rabelo boats, the lit bridges, and Porto's reflection in the water. A terrace here with a Porto Tónico is difficult to surpass.</p>
+        <div class="card-tip" data-i18n="ct34"><strong>Local tip:</strong> Porto Tónico — white Port wine with tonic water and lemon. Refreshing and genuinely local.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Cais+de+Gaia+Vila+Nova+de+Gaia" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon-row">
+          <div class="card-icon-circle">🎧</div>
+          <div>
+            <div class="card-title">Maus Hábitos / Plano B</div>
+            <div class="card-subtitle">City centre · culture & music</div>
+          </div>
+        </div>
+        <span class="badge badge-night">Night</span>
+        <p class="card-body" data-i18n="cb0">Two of Porto's most emblematic cultural spaces. Concerts, exhibitions, DJs, performance art. Not just clubs — spaces with curation and identity.</p>
+        <div class="card-tip" data-i18n="ct35"><strong>Local tip:</strong> Check the weekly programme — entry is sometimes free and unexpected, memorable things happen.</div>
+        <a class="maps-btn" href="https://maps.google.com/?q=Maus+Hábitos+Porto" target="_blank">📍 Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="section-sep"></div>
+
+<!-- ══════════════════════════════════ -->
+<!-- 10 · TRANSPORT -->
+<!-- ══════════════════════════════════ -->
+<div id="transportes">
+<div class="section fade-in">
+  <div class="section-header">
+    <span class="section-number">10 · Getting Around</span>
+    <h2 class="section-title">Moving through<br><em>the city</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Porto is compact but hilly. Knowing which transport to use — and when — saves time, money and energy. Here's what a local uses.</p>
+  </div>
+
+  <div class="transport-grid">
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚇</div>
+        <div>
+          <div class="transport-name">Metro do Porto</div>
+          <div class="transport-tag">6 lines · fast & affordable</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb0">The fastest way to cross the city. 6 colour-coded lines covering Porto, Gaia, Matosinhos, Maia and the airport. Uses the Andante card — buy one at any station and top it up. Single trips or daily passes available. Runs until around midnight.</p>
+      <div class="transport-tip" data-i18n="tt0"><strong>Local tip:</strong> The Yellow Line (D) crosses the Dom Luís I Bridge at the upper level — one of the best views in the city, from inside a metro carriage, completely free.</div>
+    </div>
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚌</div>
+        <div>
+          <div class="transport-name">STCP Bus Network</div>
+          <div class="transport-tag">Urban buses · city-wide coverage</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb1">The bus network covers areas the Metro doesn't reach, including the city centre's narrow streets, the coast (Foz, Matosinhos), and residential neighbourhoods. Same Andante card as the Metro. Can be slower due to traffic but highly useful for shorter hops.</p>
+      <div class="transport-tip" data-i18n="tt1"><strong>Local tip:</strong> Bus 500 follows the coastline from Matosinhos to Foz do Douro — scenic and practical at the same time.</div>
+    </div>
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚆</div>
+        <div>
+          <div class="transport-name">CP Comboios (Train)</div>
+          <div class="transport-tag">Regional trains · Douro & coast</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb2">CP regional trains depart from São Bento and Campanhã stations. The coastal line (Linha do Minho) reaches Viana do Castelo. The Douro Line is one of the most scenic train journeys in Europe — through vineyards and river gorges all the way to Pinhão.</p>
+      <div class="transport-tip" data-i18n="tt2"><strong>Local tip:</strong> The Douro Line train from Porto to Pinhão is a half-day trip that most tourists miss entirely. Stunning, affordable, unforgettable.</div>
+    </div>
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚲</div>
+        <div>
+          <div class="transport-name">Gira Bike Sharing</div>
+          <div class="transport-tag">Electric bikes · flat routes</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb3">Porto's shared electric bike system. Great for the flatter areas — along the Douro riverfront, through Foz, or between Boavista and the coast. The hills of the historic centre make cycling tough, but e-bikes help enormously. App-based rental.</p>
+      <div class="transport-tip" data-i18n="tt3"><strong>Local tip:</strong> The riverside cycle path from Ribeira to Foz do Douro is around 7km of flat, beautiful cycling. One of the best ways to spend a morning.</div>
+    </div>
+
+    
+      </div>
+      <p class="transport-body" data-i18n="tb4">Small passenger ferries cross the Douro between Porto and Vila Nova de Gaia. The most scenic is between Ribeira and the Gaia caves. Cheap, quick, and a completely different perspective from the water.</p>
+      <div class="transport-tip" data-i18n="tt4"><strong>Local tip:</strong> Take the ferry instead of walking the bridge — you look up at the Dom Luis I Bridge from the water. Spectacular.</div>
+    </div>
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚕</div>
+        <div>
+          <div class="transport-name">TVDE (Uber / Bolt)</div>
+          <div class="transport-tag">Door to door · always available</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb5">TVDE platforms (Uber and Bolt) are widely used in Porto and highly reliable. For airport transfers, late nights, heavy luggage, or when the Metro doesn't go where you need — this is the answer. Book directly from the app, track your driver in real time, and pay automatically.</p>
+      <div class="transport-tip" data-i18n="tt5"><strong>Local tip:</strong> Your driver might just have a guide to the city — ask them what they recommend. Locals always know more than guidebooks.</div>
+    </div>
+      </div>
+      <p class="transport-body" data-i18n="tb6">Taxis and TVDE platforms (Uber and Bolt) are widely used in Porto and reliable. For airport transfers, late nights, heavy luggage, or when the Metro doesn't go where you need — this is the answer.</p>
+      <div class="transport-tip" data-i18n="tt6"><strong>Local tip:</strong> Your driver might just have a guide to the city — ask them what they recommend. Locals always know more than guidebooks.</div>
+    </div>
+
+    <div class="transport-card">
+      <div class="transport-icon-row">
+        <div class="transport-icon">🚋</div>
+        <div>
+          <div class="transport-name">Historic Tram (Electrico)</div>
+          <div class="transport-tag">Since 1872 · living heritage</div>
+        </div>
+      </div>
+      <p class="transport-body" data-i18n="tb7">Three historic lines still operate: Line 1 along the Douro, Line 18, and Line 22 through the city centre. The iconic yellow wooden carriages are slow, loud, and completely magical. Porto's tram network was the first in the Iberian Peninsula.</p>
+      <div class="transport-tip" data-i18n="tt7"><strong>Local tip:</strong> Line 1 along the Douro from Infante to Foz — 30 minutes, a few euros, and a window into old Porto that no other transport can give you.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- REVIEWS -->
+<section id="reviews" style="padding:4rem 2rem; max-width:700px; margin:0 auto;">
+  <div class="section-header">
+    <span class="section-number">Leave a Review</span>
+    <h2 class="section-title">What did you<br><em>think?</em></h2>
+    <div class="divider"></div>
+    <p class="section-intro">Been to Porto? Found this guide useful? Leave your thoughts below.</p>
+  </div>
+  <div style="background:#1A1A1A; border:1px solid rgba(201,168,76,0.15); padding:2rem; text-align:left;">
+    <p class="rev-share-title" style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#C9A84C; margin-bottom:0.75rem; font-weight:500;">Share Your Experience</p>
+    <p class="rev-share-sub" style="font-size:15px; color:#7A6E60; margin-bottom:1.5rem; line-height:1.8;">Visited Porto? Used this guide? Leave a review — it helps other travellers and means a lot.</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf3pKO-w-JEkZhQ8ZM9tGdFavHEF8f-fn8QnqqCaYUbC6I2lg/viewform?usp=publish-editor" target="_blank" class="review-link-btn" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid #C9A84C;color:#C9A84C;padding:0.85rem 2rem;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:500;text-decoration:none;font-family:Arial,sans-serif;">★ Leave a Review</a>
+  </div>
+</section>
+
+<div style="max-width:1200px; margin:0 auto; border-top:1px solid rgba(201,168,76,0.08);"></div>
+
+<section class="donation-section" id="donate">
+  <div class="donation-inner">
+    <span class="donation-eye">&#128065;&#65039;</span>
+    <h2 class="donation-title">Did Porto surprise you?</h2>
+    <p class="donation-subtitle">This guide was made with love by a local driver who wanted to share the real Porto. If it added something to your journey, a small contribution means the world.</p>
+    <div class="donation-methods">
+      <div class="donation-card">
+        <span class="donation-card-icon">&#128241;</span>
+        <div class="donation-card-label">MB WAY</div>
+        <div class="donation-card-value">+351 917 750 870</div>
+        <div class="qr-placeholder">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://mbway.pt/pagamento/%2B351917750870&bgcolor=ffffff&color=0d0d0d&margin=6" alt="MB WAY QR"/>
+        </div>
+      </div>
+      <div class="donation-card">
+        <span class="donation-card-icon">&#128156;</span>
+        <div class="donation-card-label">Revolut</div>
+        <div class="donation-card-value">@lusyv1so</div>
+        <div class="qr-placeholder">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://revolut.me/lusyv1so&bgcolor=ffffff&color=0d0d0d&margin=6" alt="Revolut QR"/>
+        </div>
+      </div>
+    </div>
+    <p class="donation-note">No pressure, no obligation &mdash; just gratitude if you enjoyed it. &#128591;</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Eye of Porto</div>
+  <p class="footer-sub">Made with local pride &middot; Porto, Portugal</p>
+</footer>
+
+
+
+
+<script>
+var LANG = {"en": {"hero_sub": "The city as only a local sees it — the hidden spots, real flavours, and secrets that no guidebook will ever tell you.", "scroll": "Explore", "nav": ["History", "Food", "Restaurants", "Views", "Markets", "Nature", "Culture", "Secrets", "Nightlife", "Transport", "Support"], "nums": ["01 · History", "02 · Gastronomy", "03 · Restaurants", "04 · Viewpoints", "05 · Markets & Shopping", "06 · Nature & Beaches", "07 · Culture & Architecture", "08 · Secrets", "09 · Nightlife", "10 · Getting Around"], "titles": ["2000 years<br>open to the sky", "Eat where<br><em>locals eat</em>", "Where to<br><em>sit and eat</em>", "The city<br><em>from above</em>", "Where the city<br><em>has a pulse</em>", "Sea, river<br><em>and green</em>", "The city<br><em>reinventing itself</em>", "The Porto<br><em>nobody shows you</em>", "Porto after<br><em>dark</em>", "Moving through<br><em>the city</em>"], "intros": ["Porto is not just beautiful — it’s a living book. Roman roots, Baroque gold, and azulejo walls that tell stories most visitors walk past without reading.", "Eating in Porto is an experience on its own. Forget the pretty-fronted restaurants on the Ribeira — go where the locals go.", "Hand-picked by a local. Places with soul — honest food, real atmosphere.", "Porto is a city of hills — spectacular views at every turn. Here are the ones that truly earn the climb.", "From century-old stalls to modern food halls and the city’s best shopping. Markets are where the real Porto lives.", "Porto is minutes from the Atlantic Ocean, the Douro estuary and some of the greenest parks in Portugal. Most tourists never leave the historic centre — their loss.", "Porto has always mixed the ancient and the bold. These are the spaces where the city’s creative identity lives today.", "These are the places locals keep to themselves — that most tourists will never find.", "Porto at night has its own energy. It’s not a city that sleeps early — but it’s not just clubs either.", "Porto is compact but hilly. Knowing which transport to use — and when — saves time, money and energy."], "don_title": "Did Porto surprise you?", "don_sub": "This guide was made with love by a local driver who wanted to share the real Porto. If it added something to your journey, a small contribution means the world.", "don_note": "No pressure, no obligation — just gratitude if you enjoyed it. 🙏", "rev_share": "Share Your Experience", "rev_sub": "Visited Porto? Used this guide? Leave a review — it helps other travellers and means a lot.", "rev_btn": "★ Leave a Review", "maps": "&#128205; Open in Maps", "footer": "Made with local pride · Porto, Portugal"}}
+};
+// Merge card translations
+var CARDS = {"pt": {"cb": ["A catedral mais antiga da cidade. Da escadaria exterior tem uma das melhores vistas sobre a Ribeira. Os claustros interiores estão cobertos de azulejos azuis e brancos que valem cada cêntimo.", "Uma das mais belas livrarias do mundo — uma escada em espiral e vitrais magníficos que inspiraram J.K. Rowling. Vai, mas evita as tardes de fim de semana.", "20.000 azulejos que narram a história de Portugal. Uma estação de comboios que é simultaneamente um museu. Mesmo que não apanhes nenhum comboio, entra — vale cada segundo.", "O interior mais dourado que vais ver — 400 kg de ouro barroco. As catacumbas por baixo ainda têm ossos à vista. Não é para toda a gente, mas absolutamente inesquecível.", "Uma das fachadas mais fotogénicas do Porto — totalmente coberta em azulejos na parede lateral. Encaixada entre duas igrejas que partilham uma única parede, é uma curiosidade arquitetónica única.", "A rainha da gastronomia portuense. Pão, carnes variadas, fiambre, chouriço, queijo derretido e um molho de cerveja-tomate por cima. Muitas vezes servida com batatas fritas por baixo. Pesada, indulgente, obrigatória.", "Inventado no Porto no século XIX. Bacalhau lascado com batatas, cebola, azeite e ovo cozido. Comida reconfortante pura — o prato que os portuenses comem quando têm saudades de casa.", "No Porto, o café não é uma 'bica' — pede um cimbalino. Esse é o nome local e diz-lhes que sabes. Combina-o com um pastel de nata de qualquer padaria do bairro.", "Tecnicamente produzido em Vila Nova de Gaia, do outro lado do rio. As grandes casas — Sandeman, Graham's, Ramos Pinto — oferecem visitas guiadas às caves com provas incluídas. Absolutamente vale a pena.", "Costeletas de porco marinadas num pão estaladiço, embebido num molho de alho. O street food por excelência do Porto — barato, rápido e absolutamente viciante.", "Do outro lado do rio, em Gaia, tens a vista mais icónica do Porto — a Ribeira, as pontes, o Douro inteiro. A melhor foto do Porto é tirada fora do Porto.", "225 degraus de granito e no topo tens o Porto a 360°. O símbolo da cidade, construído no século XVIII. Ao entardecer o céu fica cor de laranja sobre os telhados.", "Jardins magníficos com vistas sobre o Douro e a sua foz. Os pavões passeiam livremente. Perfeito para um passeio sem pressa, especialmente de manhã ou ao fim da tarde.", "Desce as escadas do Guindais — uma descida íngreme com a Ribeira a abrir-se gradualmente à tua frente. Chegas mesmo à beira do rio. Melhor do que qualquer teleférico.", "O mercado histórico por excelência — recentemente restaurado. Fruta, peixe, flores, queijos, enchidos. As senhoras das bancas ainda te chamam 'menino' e 'amor'. Uma experiência humana antes de ser turística.", "Um mercado renovado com restaurantes e produtores locais. Mais polido que o Bolhão mas de alta qualidade. Uma boa paragem para almoço — petiscos, sushi, hambúrgueres e muito mais num só sítio.", "O maior centro comercial da área metropolitana do Porto. Mais de 300 lojas, uma enorme praça de alimentação, cinema — marcas internacionais e retalhistas portugueses. Se precisas de alguma coisa, está aqui.", "Todos os sábados perto da Sé — selos, moedas, azulejos antigos, postais, vinis. Um arquivo vivo da cidade. Maravilhosamente fotogénico.", "A rua comercial mais autêntica do Porto. Livrarias independentes, lojas de design, pequenos cafés, ateliers de artistas. Sem cadeias — tudo local. É aqui que vive o Porto criativo.", "83 hectares de lagos, prados, trilhos florestais e espaço aberto — o maior parque urbano de Portugal, que se estende até ao mar. O sítio onde os portuenses vão respirar.", "Miramar, Aguda, Granja — belas praias atlânticas a sul do Porto. Mais selvagens e menos lotadas, com falésias dramáticas e aldeias piscatórias tradicionais. A Capela do Senhor da Pedra em Miramar fica numa rocha no mar.", "As praias mais próximas do Porto — fáceis de chegar de Metro. Matosinhos é uma praia de surf com os melhores restaurantes de peixe fresco da região mesmo atrás da areia. Leça da Palmeira tem uma piscina de mar deslumbrante do arquiteto Álvaro Siza.", "O jardim botânico da Universidade do Porto — árvores centenárias, plantas exóticas e uma estufa tranquila. Um daqueles sítios que os locais se esquecem de mencionar e os turistas nunca encontram.", "O estuário do Douro é uma reserva natural protegida onde o rio encontra o mar. Aves migratórias, sapais, barcos de pesca e silêncio total. Um lado completamente diferente do Porto.", "Uma aldeia piscatória tradicional na foz do Douro — a minutos da cidade mas parecendo um mundo à parte. Redes a secar no chão, barcos a balançar, velhos a jogar às cartas. O Porto que o turismo esqueceu.", "18 hectares de jardins formalmente ajardinados em torno da icónica Casa de Serralves Art Déco cor-de-rosa e do mundialmente reconhecido Museu de Arte Contemporânea de Serralves.", "Uma das salas de concertos mais notáveis da Europa — projetada pelo arquiteto holandês Rem Koolhaas, parece um cristal gigante largado do céu. Vale a visita só pela arquitetura.", "Um destino cultural de classe mundial com sete museus sobre vinho, chocolate, cortiça, têxteis portugueses e muito mais. Vistas deslumbrantes sobre o Douro dos terraços.", "A casa do FC Porto — um dos grandes clubes de futebol da Europa. Um jogo aqui é elétrico. A visita ao estádio também é excelente, com acesso aos balneários, relvado e sala de troféus.", "O coração da arte contemporânea no Porto. Galerias, ateliers, espaços independentes. Na primeira sexta-feira de cada mês, as inaugurações são eventos públicos com vinho e os artistas presentes.", "Um miradouro secreto em forma de jardim suspenso, com vistas sobre o Douro. Escondido atrás de uma rua estreita, os portuenses vêm cá ao fim da tarde com uma cerveja e sentam-se nas pedras.", "Atrás da Ribeira turística existe um labirinto de ruelas medievais, roupa estendida, gatos e casas com séculos. O Porto que sobreviveu ao tempo. Vai sem mapa e perde-te de propósito.", "O Porto tem o seu próprio fado — mais rústico e melancólico que o de Lisboa. Em pequenos locais com luz baixa, a atmosfera é completamente diferente de uma atuação turística.", "O bairro dos bares. Dezenas de bares pequenos, esplanadas, música ao vivo na rua. O Porto aquece lentamente — entre as 23h e a 1h é o pico. Começa cedo e deixa a noite desenvolver-se.", "O cais de Gaia à noite tem os barcos rabelo iluminados, as pontes acesas e o reflexo do Porto na água. Uma esplanada aqui com um Porto Tónico é difícil de superar.", "Dois dos espaços culturais mais emblemáticos do Porto. Concertos, exposições, DJs, performance art. Não são apenas discotecas — espaços com curadoria e identidade."], "ct": ["<strong>Dica local:</strong> Vai antes das 10h — a essa hora são quase só residentes a passar.", "<strong>Dica local:</strong> O teu bilhete desconta numa compra de livro — leva algo de um autor português.", "<strong>Dica local:</strong> Olha para cima. A maioria das pessoas fotografa o átrio principal e nunca repara nos detalhes do teto.", "<strong>Dica local:</strong> Combina com a visita à Sé — estão a 5 minutos a pé.", "<strong>Dica local:</strong> A melhor foto da parede de azulejos é do outro lado da rua, com a luz do fim de tarde quando os azulejos brilham.", "<strong>Onde comer:</strong> Café Santiago (Rua Passos Manuel) — fila lá fora, mas vale cada minuto.", "<strong>Dica local:</strong> Procura pequenas tascas em Miragaia ou Bonfim — preços honestos e receitas de família.", "<strong>Dica local:</strong> Padaria Ribeiro (Cedofeita) ou qualquer padaria do bairro — não precisas de uma famosa para ter uma boa.", "<strong>Dica local:</strong> Vai ao entardecer — a luz sobre o Douro nessa hora com um copo na mão é difícil de bater.", "<strong>Onde comer:</strong> Casa das Bifanas ou Cervejaria Gazela — duas instituições portuenses que fazem isto há décadas.", "<strong>Dica local:</strong> O pôr do sol aqui é mágico. Leva uma garrafa de vinho e senta-te nos degraus do convento.", "<strong>Dica local:</strong> Não vale a pena com chuva — a névoa cobre tudo. Escolhe um dia limpo.", "<strong>Dica local:</strong> Os jardins escondem fontes e recantos que a maioria dos turistas nunca encontra — explora para além do relvado principal.", "<strong>Dica local:</strong> Sobe de baixo para o melhor ângulo de foto — a Sé aparece ao fundo.", "<strong>Dica local:</strong> Vai antes da 1h — é quando está animado. De tarde esvazia.", "<strong>Dica local:</strong> O bar no fundo tem vinhos do Douro a preços honestos.", "<strong>Dica local:</strong> Apanha o Metro Linha B — para mesmo à porta. Estacionar ao fim de semana é um pesadelo.", "<strong>Dica local:</strong> Pede o preço antes de mostrar demasiado interesse — se virem que gostas muito, o preço sobe.", "<strong>Dica local:</strong> Entra nas ruas transversais — o bairro de Cedofeita esconde pátios e murais que não aparecem em nenhum guia.", "<strong>Dica local:</strong> Atravessa o parque até à praia de Foz do Douro — sais diretamente para o Atlântico. Uma das melhores caminhadas urbanas do país.", "<strong>Dica local:</strong> Visita a capela na maré baixa para as melhores vistas e fotografias.", "<strong>Dica local:</strong> Depois da praia, come peixe grelhado na Rua Roberto Ivens — peixe grelhado inteiro, cerveja fria, cadeiras de plástico. O autêntico.", "<strong>Dica local:</strong> O jardim tem por trás uma magnífica quinta histórica. Difícil de acreditar que estás a 10 minutos do centro.", "<strong>Dica local:</strong> No outono e inverno o estuário enche-se de aves migratórias vindas de toda a Europa e África.", "<strong>Dica local:</strong> Come peixe grelhado numa das pequenas tascas — sem menus, dizem-te o que pescaram nesse dia.", "<strong>Dica local:</strong> No primeiro domingo de cada mês, a entrada é gratuita até à 1h — chega cedo, os locais sabem bem isso.", "<strong>Dica local:</strong> As visitas guiadas de arquitetura são surpreendentemente acessíveis. Os interiores são tão extraordinários como o exterior.", "<strong>Dica local:</strong> Compra um bilhete combinado para os museus que mais te interessam, e passa o resto do tempo nos terraços com um copo de vinho.", "<strong>Dica local:</strong> Se puderes, vai a um jogo. A atmosfera na Curva Sul é crua, barulhenta e completamente autêntica.", "<strong>Dica local:</strong> Vai numa sexta de inauguração — genuinamente portuense, não é um evento turístico.", "<strong>Dica local:</strong> Sem sinalização. Encontra a 'Rua das Virtudes' e segue o som da conversa.", "<strong>Dica local:</strong> As ruas são muito íngremes e o piso é irregular. Sapatos confortáveis são obrigatórios.", "<strong>Onde ir:</strong> Casa da Guitarra (R. Santa Catarina) ou Café Candelabro — alma genuína, sem consumo mínimo exagerado.", "<strong>Dica local:</strong> Evita os bares mais proeminentes na entrada — os melhores estão nas ruas interiores.", "<strong>Dica local:</strong> Porto Tónico — vinho do Porto branco com água tónica e limão. Refrescante e genuinamente local.", "<strong>Dica local:</strong> Consulta a programação semanal — a entrada é por vezes gratuita e acontecem coisas inesperadas e memoráveis."], "tb": ["A forma mais rápida de atravessar a cidade. 6 linhas com código de cores cobrindo Porto, Gaia, Matosinhos, Maia e o aeroporto. Usa o cartão Andante — compra numa qualquer estação e carrega-o. Funciona até cerca da meia-noite.", "A rede de autocarros cobre áreas que o Metro não alcança, incluindo as ruas estreitas do centro, a costa e os bairros residenciais. Mesmo cartão Andante do Metro.", "Os comboios regionais da CP partem das estações de São Bento e Campanhã. A Linha do Douro é uma das viagens de comboio mais panorâmicas da Europa — pelos vinhedos e gargantas do rio até Pinhão.", "O sistema de bicicletas elétricas partilhadas do Porto. Ótimo para as zonas mais planas — ao longo da Ribeira, por Foz ou entre Boavista e a costa. Aluguer via aplicação.", "As plataformas TVDE (Uber e Bolt) são muito utilizadas no Porto e altamente fiáveis. Para transferências para o aeroporto, noites tardias, bagagem pesada, ou quando o Metro não vai onde precisas.", "Três linhas históricas ainda em funcionamento: Linha 1 ao longo do Douro, Linha 18 e Linha 22 pelo centro da cidade. Os icónicos carros de madeira amarelos são lentos, barulhentos e completamente mágicos. A rede de elétricos do Porto foi a primeira na Península Ibérica.", "", ""], "tt": ["<strong>Dica local:</strong> A Linha Amarela (D) atravessa a Ponte Dom Luís I ao nível superior — uma das melhores vistas da cidade, de dentro de uma carruagem de metro, completamente grátis.", "<strong>Dica local:</strong> O autocarro 500 segue a linha costeira de Matosinhos até Foz do Douro — panorâmico e prático ao mesmo tempo.", "<strong>Dica local:</strong> O comboio do Douro do Porto a Pinhão é uma viagem de meio dia que a maioria dos turistas perde por completo. Deslumbrante, acessível, inesquecível.", "<strong>Dica local:</strong> O percurso ciclável ribeirinho da Ribeira até Foz do Douro tem cerca de 7km de ciclismo plano e bonito. Uma das melhores formas de passar uma manhã.", "<strong>Dica local:</strong> O teu motorista pode ter um guia da cidade — pergunta-lhe o que recomenda. Os locais sabem sempre mais do que os guias.", "<strong>Dica local:</strong> A Linha 1 ao longo do Douro desde o Infante até Foz — 30 minutos, alguns euros, e uma janela para o Porto antigo que nenhum outro transporte consegue dar.", "", ""]}, "es": {"cb": ["La catedral más antigua de la ciudad. Desde la escalinata exterior tienes una de las mejores vistas sobre la Ribeira. Los claustros interiores están cubiertos de azulejos azules y blancos.", "Una de las librerías más hermosas del mundo — una escalera de caracol y magníficas vidrieras que inspiraron a J.K. Rowling. Ve, pero evita las tardes de fin de semana.", "20.000 azulejos que narran la historia de Portugal. Una estación de tren que es simultáneamente un museo. Aunque no cojas ningún tren, entra — vale cada segundo.", "El interior más dorado que verás en tu vida — 400 kg de oro barroco. Las catacumbas debajo aún tienen huesos a la vista. No es para todos, pero absolutamente inolvidable.", "Una de las fachadas más fotogénicas de Oporto — completamente cubierta de azulejos en la pared lateral. Encajada entre dos iglesias que comparten una sola pared.", "La reina de la cocina portuense. Pan, carnes variadas, jamón, chorizo, queso derretido y una salsa de cerveza-tomate por encima. A menudo servida con patatas fritas debajo. Pesada, indulgente, obligatoria.", "Inventado en Oporto en el siglo XIX. Bacalao desmigado con patatas, cebolla, aceite de oliva y huevo cocido. Comida reconfortante pura.", "En Oporto, el café no es un 'bica' — pide un cimbalino. Ese es el nombre local. Combínalo con un pastel de nata de cualquier panadería del barrio.", "Técnicamente producido en Vila Nova de Gaia al otro lado del río. Las grandes casas ofrecen visitas guiadas a las bodegas con catas incluidas. Absolutamente vale la pena.", "Cerdo marinado en un panecillo crujiente empapado en salsa de ajo. El street food por excelencia de Oporto — barato, rápido y absolutamente adictivo.", "Desde el otro lado del río, en Gaia, tienes la vista más icónica de Oporto — la Ribeira, los puentes, el Duero completo. La mejor foto de Oporto se hace fuera de Oporto.", "225 escalones de granito y en lo alto tienes Oporto en 360°. El símbolo de la ciudad, construido en el siglo XVIII. Al atardecer el cielo se pone naranja sobre los tejados.", "Magníficos jardines con vistas sobre el Duero y su desembocadura. Los pavos reales deambulan libremente. Perfecto para un paseo sin prisa.", "Baja los escalones de Guindais — un descenso empinado con la Ribeira abriéndose gradualmente ante ti. Llegas justo al borde del río. Mejor que cualquier teleférico.", "El mercado histórico por excelencia — recientemente restaurado. Fruta, pescado, flores, quesos, embutidos. Las señoras de los puestos aún te llaman 'menino' y 'amor'.", "Un mercado renovado con restaurantes y productores locales. Más pulido que el Bolhão pero de alta calidad. Una buena parada para comer.", "El mayor centro comercial del área metropolitana de Oporto. Más de 300 tiendas, un enorme patio de comidas, cine.", "Cada sábado cerca de la Sé — sellos, monedas, azulejos antiguos, postales, vinilos. Un archivo vivo de la ciudad.", "La calle comercial más auténtica de Oporto. Librerías independientes, tiendas de diseño, pequeños cafés, talleres de artistas. Sin cadenas — todo local.", "83 hectáreas de lagos, praderas, senderos forestales y espacio abierto — el parque urbano más grande de Portugal, que se extiende hasta el mar.", "Miramar, Aguda, Granja — hermosas playas atlánticas al sur de Oporto. Más salvajes y menos concurridas, con acantilados dramáticos y pueblos pesqueros tradicionales.", "Las playas más cercanas a Oporto — fáciles en Metro. Matosinhos es una playa de surf con los mejores restaurantes de pescado fresco de la región justo detrás de la arena.", "El jardín botánico de la Universidad de Oporto — árboles centenarios, plantas exóticas y un tranquilo invernadero.", "El estuario del Duero es una reserva natural protegida donde el río se encuentra con el mar. Aves migratorias, marismas, barcos de pesca y silencio total.", "Un pueblo pesquero tradicional en la desembocadura del Duero — a minutos de la ciudad pero sintiéndose a un mundo de distancia.", "18 hectáreas de jardines formalmente ajardinados que rodean la icónica Casa de Serralves Art Déco de color rosa y el Museo de Arte Contemporáneo de Serralves.", "Una de las salas de conciertos más notables de Europa — diseñada por el arquitecto holandés Rem Koolhaas, parece un cristal gigante caído del cielo.", "Un destino cultural de clase mundial con siete museos sobre vino, chocolate, corcho, textiles portugueses y más. Vistas impresionantes sobre el Duero desde las terrazas.", "El estadio del FC Oporto — uno de los grandes clubes de fútbol de Europa. Un partido aquí es eléctrico.", "El corazón del arte contemporáneo en Oporto. Galerías, talleres, espacios independientes. El primer viernes de cada mes, las inauguraciones son eventos públicos.", "Un mirador secreto en forma de jardín suspendido, con vistas sobre el Duero. Escondido detrás de una calle estrecha, los portuenses vienen aquí al atardecer con una cerveza.", "Detrás de la Ribeira turística hay un laberinto de callejuelas medievales, ropa tendida, gatos y casas centenarias. El Oporto que sobrevivió al tiempo.", "Oporto tiene su propio fado — más rústico y melancólico que el de Lisboa. En pequeños locales con poca luz, la atmósfera es completamente diferente.", "El barrio de los bares. Decenas de pequeños bares, terrazas, música en vivo en la calle. Oporto se calienta lentamente — entre las 23h y la 1h es el pico.", "El muelle de Gaia por la noche tiene los barcos rabelo iluminados, los puentes encendidos y el reflejo de Oporto en el agua.", "Dos de los espacios culturales más emblemáticos de Oporto. Conciertos, exposiciones, DJs, performance art. No son solo discotecas — espacios con curaduría e identidad."], "ct": ["<strong>Consejo local:</strong> Ve antes de las 10h — a esa hora casi solo pasan residentes.", "<strong>Consejo local:</strong> Tu entrada descuenta en una compra de libro — llévate algo de un autor portugués.", "<strong>Consejo local:</strong> Mira hacia arriba. La mayoría fotografía el vestíbulo principal y nunca repara en los detalles del techo.", "<strong>Consejo local:</strong> Combínalo con la visita a la Sé — están a 5 minutos a pie.", "<strong>Consejo local:</strong> La mejor foto de la pared de azulejos es desde el otro lado de la calle con la luz de la tarde.", "<strong>Dónde comer:</strong> Café Santiago (Rua Passos Manuel) — cola fuera, pero vale cada minuto.", "<strong>Consejo local:</strong> Busca pequeñas tascas en Miragaia o Bonfim — precios honestos y recetas familiares.", "<strong>Consejo local:</strong> Padaria Ribeiro (Cedofeita) o cualquier panadería del barrio.", "<strong>Consejo local:</strong> Ve al atardecer — la luz sobre el Duero con una copa en mano es difícil de superar.", "<strong>Dónde comer:</strong> Casa das Bifanas o Cervejaria Gazela — dos instituciones portuenses.", "<strong>Consejo local:</strong> La puesta de sol aquí es mágica. Lleva una botella de vino y siéntate en los escalones del convento.", "<strong>Consejo local:</strong> No vale la pena con lluvia — la niebla lo cubre todo. Elige un día despejado.", "<strong>Consejo local:</strong> Los jardines esconden fuentes y rincones apartados que la mayoría de turistas nunca encuentra.", "<strong>Consejo local:</strong> Sube desde abajo para el mejor ángulo de foto — la Sé aparece al fondo.", "<strong>Consejo local:</strong> Ve antes de la 1h — es cuando está animado.", "<strong>Consejo local:</strong> El bar del fondo tiene vinos del Duero a precios honestos.", "<strong>Consejo local:</strong> Toma el Metro Línea B — para justo en la puerta. Aparcar el fin de semana es una pesadilla.", "<strong>Consejo local:</strong> Pregunta el precio antes de mostrar demasiado interés.", "<strong>Consejo local:</strong> Entra en las calles perpendiculares — patios y murales que no aparecen en ninguna guía.", "<strong>Consejo local:</strong> Cruza el parque hasta la playa de Foz do Douro — sales directamente al Atlántico.", "<strong>Consejo local:</strong> Visita la capilla en marea baja para las mejores vistas y fotografías.", "<strong>Consejo local:</strong> Después de la playa, come pescado a la brasa en la Rua Roberto Ivens.", "<strong>Consejo local:</strong> El jardín está junto a una magnífica villa histórica. Difícil creer que estás a 10 minutos del centro.", "<strong>Consejo local:</strong> En otoño e invierno el estuario se llena de aves migratorias de toda Europa y África.", "<strong>Consejo local:</strong> Come pescado a la brasa en una de las pequeñas tascas — sin carta, te dicen lo que pescaron ese día.", "<strong>Consejo local:</strong> El primer domingo de cada mes, la entrada es gratuita hasta la 1h.", "<strong>Consejo local:</strong> Las visitas guiadas de arquitectura son sorprendentemente asequibles.", "<strong>Consejo local:</strong> Compra una entrada combinada para los museos que más te interesan.", "<strong>Consejo local:</strong> Si puedes, ve a un partido. La atmósfera en la Curva Sul es cruda, ruidosa y completamente auténtica.", "<strong>Consejo local:</strong> Ve en un viernes de inauguración — genuinamente portuense, no es un evento turístico.", "<strong>Consejo local:</strong> Sin señalización. Encuentra la 'Rua das Virtudes' y sigue el sonido de las conversaciones.", "<strong>Consejo local:</strong> Las calles son muy empinadas y el suelo es irregular. Zapatos cómodos son imprescindibles.", "<strong>Dónde ir:</strong> Casa da Guitarra (R. Santa Catarina) o Café Candelabro — alma genuina, sin consumo mínimo exagerado.", "<strong>Consejo local:</strong> Evita los bares más prominentes a la entrada — los mejores están en las calles interiores.", "<strong>Consejo local:</strong> Porto Tónico — vino de Oporto blanco con tónica y limón. Refrescante y genuinamente local.", "<strong>Consejo local:</strong> Consulta la programación semanal — la entrada es a veces gratuita."], "tb": ["La forma más rápida de cruzar la ciudad. 6 líneas de colores que cubren Oporto, Gaia, Matosinhos, Maia y el aeropuerto. Usa la tarjeta Andante. Funciona hasta medianoche aproximadamente.", "La red de autobuses cubre áreas que el Metro no alcanza. La misma tarjeta Andante del Metro.", "Los trenes regionales salen de las estaciones de São Bento y Campanhã. La Línea del Duero es uno de los viajes en tren más panorámicos de Europa.", "El sistema de bicicletas eléctricas compartidas de Oporto. Ideal para las zonas más llanas. Alquiler por aplicación.", "Las plataformas TVDE (Uber y Bolt) son muy utilizadas en Oporto y altamente fiables. Para traslados al aeropuerto, noches tardías o equipaje pesado.", "Tres líneas históricas aún en funcionamiento: Línea 1 a lo largo del Duero, Línea 18 y Línea 22. Los icónicos vagones de madera amarillos son lentos, ruidosos y completamente mágicos.", "", ""], "tt": ["<strong>Consejo local:</strong> La Línea Amarilla (D) cruza el Puente Dom Luís I por el nivel superior — una de las mejores vistas de la ciudad, completamente gratis.", "<strong>Consejo local:</strong> El autobús 500 sigue la línea costera de Matosinhos a Foz do Douro — panorámico y práctico.", "<strong>Consejo local:</strong> El tren del Duero de Oporto a Pinhão es un viaje de medio día que la mayoría de turistas pierde. Impresionante, asequible, inolvidable.", "<strong>Consejo local:</strong> El carril bici fluvial de Ribeira a Foz do Douro son unos 7km de ciclismo llano y hermoso.", "<strong>Consejo local:</strong> Tu conductor puede tener una guía de la ciudad — pregúntale qué recomienda.", "<strong>Consejo local:</strong> La Línea 1 a lo largo del Duero desde Infante hasta Foz — 30 minutos, unos pocos euros, y una ventana al Oporto antiguo.", "", ""]}, "fr": {"cb": ["La cathédrale la plus ancienne de la ville. Depuis l'escalier extérieur, vous avez une des meilleures vues sur la Ribeira. Les cloîtres intérieurs sont couverts d'azulejos bleus et blancs.", "L'une des plus belles librairies du monde — un escalier en spirale et de magnifiques vitraux qui ont inspiré J.K. Rowling. Allez-y, mais évitez les après-midis du week-end.", "20 000 azulejos qui narrent l'histoire du Portugal. Une gare qui est simultanément un musée. Même si vous ne prenez aucun train, entrez — cela vaut chaque seconde.", "L'intérieur le plus doré que vous verrez jamais — 400 kg d'or baroque. Les catacombes en dessous ont encore des ossements à vue. Pas pour tout le monde, mais absolument inoubliable.", "L'une des façades les plus photographiées de Porto — entièrement couverte d'azulejos sur le mur latéral. Coincée entre deux églises qui partagent un seul mur.", "La reine de la cuisine portuense. Pain, viandes mélangées, jambon, chorizo, fromage fondu et une sauce bière-tomate par-dessus. Souvent servie avec des frites en dessous. Lourd, indulgent, obligatoire.", "Inventé à Porto au XIXe siècle. Morue effeuillée avec pommes de terre, oignon, huile d'olive et œuf dur. Pur réconfort.", "À Porto, le café ne s'appelle pas 'bica' — demandez un cimbalino. C'est le nom local. Accompagnez-le d'un pastel de nata de n'importe quelle boulangerie du quartier.", "Techniquement produit à Vila Nova de Gaia, de l'autre côté du fleuve. Les grandes maisons offrent des visites guidées des caves avec dégustations. Absolument vaut le détour.", "Porc mariné dans un pain croustillant imbibé de sauce à l'ail. Le street food par excellence de Porto — pas cher, rapide et absolument addictif.", "De l'autre côté du fleuve, à Gaia, vous avez la vue la plus iconique de Porto — la Ribeira, les ponts, le Douro tout entier. La meilleure photo de Porto se fait hors de Porto.", "225 marches de granit et au sommet vous avez Porto à 360°. Le symbole de la ville, construit au XVIIIe siècle. Au crépuscule, le ciel devient orange sur les toits.", "Magnifiques jardins avec vues sur le Douro et son embouchure. Les paons se promènent librement. Parfait pour une promenade sans hâte.", "Descendez les escaliers du Guindais — une descente raide avec la Ribeira qui s'ouvre progressivement devant vous. Vous arrivez directement au bord du fleuve.", "Le marché historique par excellence — récemment restauré. Fruits, poissons, fleurs, fromages, charcuteries. Les vendeuses vous appellent encore 'menino' et 'amor'.", "Un marché rénové avec restaurants et producteurs locaux. Plus soigné que le Bolhão mais de haute qualité.", "Le plus grand centre commercial de l'aire métropolitaine de Porto. Plus de 300 boutiques, une immense restauration, cinéma.", "Chaque samedi près de la Sé — timbres, pièces, vieux azulejos, cartes postales, vinyles. Une archive vivante de la ville.", "La rue commerciale la plus authentique de Porto. Librairies indépendantes, boutiques de design, petits cafés, ateliers d'artistes. Sans chaînes — tout local.", "83 hectares de lacs, prairies, sentiers forestiers et espace ouvert — le plus grand parc urbain du Portugal, s'étendant jusqu'à la mer.", "Miramar, Aguda, Granja — de belles plages atlantiques au sud de Porto. Plus sauvages et moins fréquentées, avec des falaises dramatiques et des villages de pêcheurs traditionnels.", "Les plages les plus proches de Porto — faciles en Métro. Matosinhos est une plage de surf avec les meilleurs restaurants de poisson frais de la région juste derrière le sable.", "Le jardin botanique de l'Université de Porto — arbres centenaires, plantes exotiques et une serre tranquille.", "L'estuaire du Douro est une réserve naturelle protégée où le fleuve rencontre la mer. Oiseaux migrateurs, marais salants, bateaux de pêche et silence total.", "Un village de pêcheurs traditionnel à l'embouchure du Douro — à quelques minutes de la ville mais semblant être dans un autre monde.", "18 hectares de jardins formellement aménagés entourant l'emblématique Maison de Serralves Art Déco rose et le Musée d'Art Contemporain de Serralves.", "L'une des salles de concert les plus remarquables d'Europe — conçue par l'architecte néerlandais Rem Koolhaas, elle ressemble à un cristal géant tombé du ciel.", "Une destination culturelle de classe mondiale avec sept musées sur le vin, le chocolat, le liège, les textiles portugais et plus encore.", "Le stade du FC Porto — l'un des grands clubs de football européens. Un match ici est électrique.", "Le cœur de l'art contemporain à Porto. Galeries, ateliers, espaces indépendants. Le premier vendredi de chaque mois, les vernissages sont des événements publics.", "Un mirador secret en forme de jardin suspendu, avec des vues sur le Douro. Caché derrière une rue étroite, les Portuenses viennent ici en fin d'après-midi avec une bière.", "Derrière la Ribeira touristique se trouve un labyrinthe de ruelles médiévales, de linge suspendu, de chats et de maisons centenaires.", "Porto a son propre fado — plus rustique et mélancolique que celui de Lisbonne. Dans de petits locaux à faible luminosité, l'atmosphère est complètement différente.", "Le quartier des bars. Des dizaines de petits bars, terrasses, musique live dans la rue. Porto se réchauffe lentement — entre 23h et 1h c'est le pic.", "Le quai de Gaia la nuit avec les bateaux rabelo illuminés, les ponts allumés et le reflet de Porto dans l'eau.", "Deux des espaces culturels les plus emblématiques de Porto. Concerts, expositions, DJs, performance art. Pas seulement des clubs — des espaces avec curation et identité."], "ct": ["<strong>Conseil local :</strong> Allez avant 10h — à cette heure, ce sont presque uniquement des résidents qui passent.", "<strong>Conseil local :</strong> Votre billet donne droit à une réduction sur un achat de livre — ramenez quelque chose d'un auteur portugais.", "<strong>Conseil local :</strong> Regardez en haut. La plupart des gens photographient le hall principal et ne remarquent jamais les détails du plafond.", "<strong>Conseil local :</strong> Combinez avec la visite de la Sé — à 5 minutes à pied.", "<strong>Conseil local :</strong> La meilleure photo du mur d'azulejos est depuis l'autre côté de la rue avec la lumière de fin d'après-midi.", "<strong>Où manger :</strong> Café Santiago (Rua Passos Manuel) — file d'attente dehors, mais ça vaut chaque minute.", "<strong>Conseil local :</strong> Cherchez de petites tascas à Miragaia ou Bonfim — prix honnêtes et recettes familiales.", "<strong>Conseil local :</strong> Padaria Ribeiro (Cedofeita) ou n'importe quelle boulangerie de quartier.", "<strong>Conseil local :</strong> Allez au crépuscule — la lumière sur le Douro avec un verre en main est difficile à battre.", "<strong>Où manger :</strong> Casa das Bifanas ou Cervejaria Gazela — deux institutions portuenses.", "<strong>Conseil local :</strong> Le coucher de soleil ici est magique. Apportez une bouteille de vin et asseyez-vous sur les marches du couvent.", "<strong>Conseil local :</strong> Pas intéressant sous la pluie — la brume couvre tout. Choisissez un jour clair.", "<strong>Conseil local :</strong> Les jardins cachent des fontaines et des recoins isolés que la plupart des touristes ne trouvent jamais.", "<strong>Conseil local :</strong> Montez depuis le bas pour le meilleur angle photo — la Sé apparaît au fond.", "<strong>Conseil local :</strong> Allez avant 13h — c'est quand c'est animé.", "<strong>Conseil local :</strong> Le bar au fond a des vins du Douro à prix honnêtes.", "<strong>Conseil local :</strong> Prenez le Métro Ligne B — s'arrête juste devant la porte. Se garer le week-end est un cauchemar.", "<strong>Conseil local :</strong> Demandez le prix avant de montrer trop d'intérêt.", "<strong>Conseil local :</strong> Entrez dans les rues perpendiculaires — cours et fresques murales qui n'apparaissent dans aucun guide.", "<strong>Conseil local :</strong> Traversez le parc jusqu'à la plage de Foz do Douro — vous débouchez directement sur l'Atlantique.", "<strong>Conseil local :</strong> Visitez la chapelle à marée basse pour les meilleures vues et photos.", "<strong>Conseil local :</strong> Après la plage, mangez du poisson grillé à la Rua Roberto Ivens.", "<strong>Conseil local :</strong> Le jardin jouxte une magnifique villa historique. Difficile de croire que vous êtes à 10 minutes du centre.", "<strong>Conseil local :</strong> En automne et en hiver, l'estuaire se remplit d'oiseaux migrateurs de toute l'Europe et d'Afrique.", "<strong>Conseil local :</strong> Mangez du poisson grillé dans l'une des petites tascas — sans menus, ils vous disent ce qu'ils ont pêché ce jour-là.", "<strong>Conseil local :</strong> Le premier dimanche de chaque mois, l'entrée est gratuite jusqu'à 13h.", "<strong>Conseil local :</strong> Les visites architecturales guidées sont étonnamment abordables.", "<strong>Conseil local :</strong> Achetez un billet combiné pour les musées qui vous intéressent le plus.", "<strong>Conseil local :</strong> Si vous pouvez, allez à un match. L'ambiance dans la Curva Sul est brute, bruyante et complètement authentique.", "<strong>Conseil local :</strong> Allez un vendredi de vernissage — genuinement portuense, pas un événement touristique.", "<strong>Conseil local :</strong> Pas de signalisation. Trouvez la 'Rua das Virtudes' et suivez le son des conversations.", "<strong>Conseil local :</strong> Les rues sont très escarpées et le sol est irrégulier. Des chaussures confortables sont indispensables.", "<strong>Où aller :</strong> Casa da Guitarra (R. Santa Catarina) ou Café Candelabro — âme genuïne, sans consommation minimum exagérée.", "<strong>Conseil local :</strong> Évitez les bars les plus en vue à l'entrée — les meilleurs sont dans les rues intérieures.", "<strong>Conseil local :</strong> Porto Tónico — vin de Porto blanc avec tonique et citron. Rafraîchissant et genuinement local.", "<strong>Conseil local :</strong> Consultez la programmation hebdomadaire — l'entrée est parfois gratuite."], "tb": ["La façon la plus rapide de traverser la ville. 6 lignes avec code couleur couvrant Porto, Gaia, Matosinhos, Maia et l'aéroport. Utilisez la carte Andante. Fonctionne jusqu'à minuit environ.", "Le réseau de bus couvre les zones que le Métro n'atteint pas. Même carte Andante que le Métro.", "Les trains régionaux partent des gares de São Bento et Campanhã. La Ligne du Douro est l'un des trajets en train les plus panoramiques d'Europe.", "Le système de vélos électriques en libre-service de Porto. Idéal pour les zones plus plates. Location par application.", "Les plateformes TVDE (Uber et Bolt) sont très utilisées à Porto et très fiables. Pour les transferts vers l'aéroport, les nuits tardives ou les bagages lourds.", "Trois lignes historiques encore en service : Ligne 1 le long du Douro, Ligne 18 et Ligne 22. Les emblématiques voitures en bois jaunes sont lentes, bruyantes et complètement magiques.", "", ""], "tt": ["<strong>Conseil local :</strong> La Ligne Jaune (D) traverse le Pont Dom Luís I au niveau supérieur — l'une des meilleures vues de la ville, complètement gratuit.", "<strong>Conseil local :</strong> Le bus 500 suit la côte de Matosinhos à Foz do Douro — panoramique et pratique.", "<strong>Conseil local :</strong> Le train du Douro de Porto à Pinhão est un trajet d'une demi-journée que la plupart des touristes ratent. Magnifique, abordable, inoubliable.", "<strong>Conseil local :</strong> La piste cyclable fluviale de Ribeira à Foz do Douro fait environ 7km de cyclisme plat et magnifique.", "<strong>Conseil local :</strong> Votre chauffeur a peut-être un guide de la ville — demandez-lui ce qu'il recommande.", "<strong>Conseil local :</strong> La Ligne 1 le long du Douro depuis Infante jusqu'à Foz — 30 minutes, quelques euros, et une fenêtre sur le vieux Porto.", "", ""]}, "de": {"cb": ["Die älteste Kathedrale der Stadt. Von der Außentreppe haben Sie eine der besten Aussichten über die Ribeira. Die Kreuzgänge sind mit blauen und weißen Azulejos bedeckt.", "Eine der schönsten Buchhandlungen der Welt — eine Wendeltreppe und prächtige Buntglasfenster, die J.K. Rowling inspirierten. Gehen Sie hin, aber meiden Sie Wochenendnachmittage.", "20.000 Azulejo-Kacheln, die die Geschichte Portugals erzählen. Ein Bahnhof, der gleichzeitig ein Museum ist. Auch wenn Sie keinen Zug nehmen, gehen Sie hinein.", "Das vergoldetste Innere, das Sie je sehen werden — 400 kg Barockgold. Die Katakomben darunter haben noch Knochen zu sehen. Nicht für jeden, aber absolut unvergesslich.", "Eine der fotogensten Fassaden Portos — vollständig mit Azulejos an der Seitenwand bedeckt. Eingeklemmt zwischen zwei Kirchen, die sich eine einzige Wand teilen.", "Die Königin der Portuenser Küche. Brot, gemischtes Fleisch, Schinken, Chorizo, geschmolzener Käse und eine Bier-Tomaten-Sauce darüber. Oft mit Pommes darunter serviert.", "Im 19. Jahrhundert in Porto erfunden. Gezupfter Stockfisch mit Kartoffeln, Zwiebeln, Olivenöl und gekochtem Ei. Purer Komfort.", "In Porto heißt der Kaffee nicht 'bica' — bestellen Sie einen cimbalino. Das ist der lokale Name. Kombinieren Sie ihn mit einem Pastel de nata aus einer Bäckerei im Viertel.", "Technisch in Vila Nova de Gaia auf der anderen Flussseite produziert. Die großen Häuser bieten geführte Kellerbesichtigungen mit Verkostungen an.", "Mariniertes Schweinefleisch in einem knusprigen Brötchen mit Knoblauchsauce. Das Street-Food par excellence von Porto — billig, schnell und absolut süchtig machend.", "Von der anderen Flussseite in Gaia haben Sie die ikonischste Aussicht auf Porto — die Ribeira, die Brücken, den gesamten Douro. Das beste Foto von Porto wird außerhalb Portos gemacht.", "225 Granittreppenstufen und oben haben Sie Porto in 360°. Das Symbol der Stadt, im 18. Jahrhundert erbaut. In der Dämmerung wird der Himmel über den Dächern orange.", "Herrliche Gärten mit Blick auf den Douro und seine Mündung. Pfauen wandern frei umher. Perfekt für einen gemütlichen Spaziergang.", "Gehen Sie die Guindais-Treppen hinunter — ein steiler Abstieg, bei dem sich die Ribeira langsam vor Ihnen öffnet. Sie kommen direkt am Flussufer an.", "Der historische Markt schlechthin — kürzlich restauriert. Obst, Fisch, Blumen, Käse, Wurstwaren. Die Standverkäuferinnen nennen Sie noch 'menino' und 'amor'.", "Ein renovierter Markt mit Restaurants und lokalen Produzenten. Gehobener als der Bolhão, aber von hoher Qualität.", "Das größte Einkaufszentrum der Metropolregion Porto. Über 300 Geschäfte, riesige Gastronomie, Kino.", "Jeden Samstag in der Nähe der Sé — Briefmarken, Münzen, alte Azulejos, Postkarten, Vinyl. Ein lebendes Archiv der Stadt.", "Die authentischste Einkaufsstraße Portos. Unabhängige Buchläden, Designgeschäfte, kleine Cafés, Künstlerateliers. Keine Ketten — alles lokal.", "83 Hektar Seen, Wiesen, Waldwege und offener Raum — der größte Stadtpark Portugals, der sich bis zum Meer erstreckt.", "Miramar, Aguda, Granja — schöne Atlantikstrände südlich von Porto. Wilder und weniger überfüllt, mit dramatischen Klippen und traditionellen Fischerdörfern.", "Die Strände am nächsten bei Porto — leicht mit der Metro erreichbar. Matosinhos ist ein Surfstrand mit den besten Frischfischrestaurants der Region direkt hinter dem Sand.", "Der Botanische Garten der Universität Porto — jahrhundertealte Bäume, exotische Pflanzen und ein ruhiges Gewächshaus.", "Die Douro-Mündung ist ein geschütztes Naturschutzgebiet, wo der Fluss auf das Meer trifft. Zugvögel, Salzmarschen, Fischerboote und totale Stille.", "Ein traditionelles Fischerdorf an der Douro-Mündung — nur Minuten von der Stadt entfernt, aber wie eine andere Welt.", "18 Hektar formal angelegte Gärten rund um das ikonische rosa Art-Déco-Haus Serralves und das weltberühmte Museum für zeitgenössische Kunst.", "Einer der bemerkenswertesten Konzertsäle Europas — entworfen vom niederländischen Architekten Rem Koolhaas, sieht er aus wie ein riesiger Kristall, der vom Himmel gefallen ist.", "Ein kulturelles Ziel der Weltklasse mit sieben Museen über Wein, Schokolade, Kork, portugiesische Textilien und mehr.", "Das Stadion des FC Porto — einer der großen Fußballklubs Europas. Ein Spiel hier ist elektrisierend.", "Das Herz der zeitgenössischen Kunst in Porto. Galerien, Ateliers, unabhängige Räume. Am ersten Freitag jedes Monats sind Eröffnungen öffentliche Veranstaltungen.", "Ein geheimer Aussichtspunkt in Form eines Hänge-Gartens mit Blick auf den Douro. Versteckt hinter einer engen Straße, kommen Einheimische hier nachmittags mit einem Bier vorbei.", "Hinter der touristischen Ribeira gibt es ein Labyrinth mittelalterlicher Gassen, hängender Wäsche, Katzen und jahrhundertealter Häuser.", "Porto hat seinen eigenen Fado — rustikaler und melancholischer als der Lissabonner. In kleinen Lokalen mit gedämpftem Licht ist die Atmosphäre völlig anders.", "Das Barviertel. Dutzende kleine Bars, Terrassen, Live-Musik auf der Straße. Porto wärmt sich langsam auf — zwischen 23 und 1 Uhr ist der Höhepunkt.", "Der Gaia-Kai bei Nacht mit beleuchteten Rabelo-Booten, leuchtenden Brücken und Portos Spiegelbild im Wasser.", "Zwei der emblematischsten Kulturräume Portos. Konzerte, Ausstellungen, DJs, Performance-Kunst. Nicht nur Clubs — Räume mit Kuratierung und Identität."], "ct": ["<strong>Lokaler Tipp:</strong> Gehen Sie vor 10 Uhr — zu dieser Zeit sind es fast nur Anwohner.", "<strong>Lokaler Tipp:</strong> Ihr Ticket wird beim Buchkauf angerechnet — bringen Sie etwas von einem portugiesischen Autor mit.", "<strong>Lokaler Tipp:</strong> Schauen Sie nach oben. Die meisten fotografieren die Haupthalle und bemerken die Deckendetails nie.", "<strong>Lokaler Tipp:</strong> Kombinieren Sie es mit dem Besuch der Sé — 5 Minuten zu Fuß entfernt.", "<strong>Lokaler Tipp:</strong> Das beste Foto der Azulejo-Wand ist von der anderen Straßenseite im späten Nachmittagslicht.", "<strong>Wo essen:</strong> Café Santiago (Rua Passos Manuel) — Schlange draußen, aber jeden Moment wert.", "<strong>Lokaler Tipp:</strong> Suchen Sie kleine Tascas in Miragaia oder Bonfim — faire Preise und Familienrezepte.", "<strong>Lokaler Tipp:</strong> Padaria Ribeiro (Cedofeita) oder jede Bäckerei im Viertel.", "<strong>Lokaler Tipp:</strong> Gehen Sie in der Abenddämmerung — das Licht über dem Douro mit einem Glas in der Hand ist schwer zu übertreffen.", "<strong>Wo essen:</strong> Casa das Bifanas oder Cervejaria Gazela — zwei Portuenser Institutionen.", "<strong>Lokaler Tipp:</strong> Der Sonnenuntergang hier ist magisch. Bringen Sie eine Flasche Wein mit und setzen Sie sich auf die Klosterstühlen.", "<strong>Lokaler Tipp:</strong> Bei Regen nicht lohnenswert — Nebel bedeckt alles. Wählen Sie einen klaren Tag.", "<strong>Lokaler Tipp:</strong> Die Gärten verstecken Brunnen und abgelegene Ecken, die die meisten Touristen nie finden.", "<strong>Lokaler Tipp:</strong> Gehen Sie von unten nach oben für den besten Fotowinkel — die Sé erscheint im Hintergrund.", "<strong>Lokaler Tipp:</strong> Gehen Sie vor 13 Uhr — dann ist es lebendig.", "<strong>Lokaler Tipp:</strong> Die Bar am Ende hat Douro-Weine zu fairen Preisen.", "<strong>Lokaler Tipp:</strong> Nehmen Sie die Metro-Linie B — hält direkt vor der Tür. Parken am Wochenende ist ein Albtraum.", "<strong>Lokaler Tipp:</strong> Fragen Sie den Preis, bevor Sie zu viel Interesse zeigen.", "<strong>Lokaler Tipp:</strong> Gehen Sie in die Nebenstraßen — Höfe und Wandmalereien, die in keinem Reiseführer erscheinen.", "<strong>Lokaler Tipp:</strong> Gehen Sie durch den Park bis zum Strand von Foz do Douro — Sie kommen direkt am Atlantik heraus.", "<strong>Lokaler Tipp:</strong> Besuchen Sie die Kapelle bei Ebbe für die besten Aussichten und Fotos.", "<strong>Lokaler Tipp:</strong> Nach dem Strand, essen Sie gegrillten Fisch in der Rua Roberto Ivens.", "<strong>Lokaler Tipp:</strong> Der Garten grenzt an eine prächtige historische Villa. Kaum zu glauben, dass Sie 10 Minuten vom Zentrum entfernt sind.", "<strong>Lokaler Tipp:</strong> Im Herbst und Winter füllt sich die Mündung mit Zugvögeln aus ganz Europa und Afrika.", "<strong>Lokaler Tipp:</strong> Essen Sie gegrillten Fisch in einer der kleinen Tascas — ohne Speisekarte, sie sagen Ihnen, was sie heute gefangen haben.", "<strong>Lokaler Tipp:</strong> Am ersten Sonntag jedes Monats ist der Eintritt bis 13 Uhr kostenlos.", "<strong>Lokaler Tipp:</strong> Die geführten Architekturtouren sind überraschend günstig.", "<strong>Lokaler Tipp:</strong> Kaufen Sie ein Kombiticket für die Museen, die Sie am meisten interessieren.", "<strong>Lokaler Tipp:</strong> Wenn Sie können, gehen Sie zu einem Spiel. Die Atmosphäre in der Curva Sul ist rau, laut und absolut authentisch.", "<strong>Lokaler Tipp:</strong> Gehen Sie an einem Eröffnungsfreitag — genuines Porto-Erlebnis, kein Touristenevent.", "<strong>Lokaler Tipp:</strong> Keine Beschilderung. Finden Sie die 'Rua das Virtudes' und folgen Sie dem Gesprächslärm.", "<strong>Lokaler Tipp:</strong> Die Straßen sind sehr steil und der Boden uneben. Bequeme Schuhe sind ein Muss.", "<strong>Wo gehen:</strong> Casa da Guitarra (R. Santa Catarina) oder Café Candelabro — echte Seele, kein übertriebener Mindestverzehr.", "<strong>Lokaler Tipp:</strong> Meiden Sie die auffälligsten Bars am Eingang — die besten sind in den Innenstraßen.", "<strong>Lokaler Tipp:</strong> Porto Tónico — weißer Portwein mit Tonic und Zitrone. Erfrischend und genuines Lokalgetränk.", "<strong>Lokaler Tipp:</strong> Schauen Sie sich das Wochenprogramm an — der Eintritt ist manchmal kostenlos."], "tb": ["Der schnellste Weg durch die Stadt. 6 farbkodierte Linien für Porto, Gaia, Matosinhos, Maia und den Flughafen. Andante-Karte verwenden. Betrieb bis ca. Mitternacht.", "Das Busnetz deckt Bereiche ab, die die Metro nicht erreicht. Dieselbe Andante-Karte wie die Metro.", "Regionalzüge fahren von den Bahnhöfen São Bento und Campanhã ab. Die Douro-Linie ist eine der landschaftlich schönsten Zugfahrten Europas.", "Portos gemeinsames Elektrofahrradsystem. Ideal für flachere Bereiche. Miete per App.", "TVDE-Plattformen (Uber und Bolt) sind in Porto weit verbreitet und sehr zuverlässig. Für Flughafentransfers, späte Nächte oder schweres Gepäck.", "Drei historische Linien noch in Betrieb: Linie 1 entlang des Douro, Linie 18 und Linie 22. Die ikonischen gelben Holzwagen sind langsam, laut und völlig magisch.", "", ""], "tt": ["<strong>Lokaler Tipp:</strong> Die Gelbe Linie (D) überquert die Dom-Luís-I-Brücke auf der Obertasse — eine der besten Stadtansichten, völlig kostenlos.", "<strong>Lokaler Tipp:</strong> Bus 500 folgt der Küstenlinie von Matosinhos bis Foz do Douro — landschaftlich schön und praktisch.", "<strong>Lokaler Tipp:</strong> Der Douro-Zug von Porto nach Pinhão ist eine Halbtagsfahrt, die die meisten Touristen verpassen. Atemberaubend, günstig, unvergesslich.", "<strong>Lokaler Tipp:</strong> Der Flussradweg von Ribeira bis Foz do Douro ist etwa 7 km flaches, schönes Radfahren.", "<strong>Lokaler Tipp:</strong> Ihr Fahrer hat vielleicht einen Stadtführer — fragen Sie ihn, was er empfiehlt.", "<strong>Lokaler Tipp:</strong> Linie 1 entlang des Douro von Infante bis Foz — 30 Minuten, ein paar Euro, und ein Fenster ins alte Porto.", "", ""]}, "it": {"cb": ["La cattedrale più antica della città. Dalla scalinata esterna si ha una delle migliori viste sulla Ribeira. I chiostri interni sono coperti di azulejos blu e bianchi.", "Una delle più belle librerie del mondo — una scala a chiocciola e magnifiche vetrate che hanno ispirato J.K. Rowling. Andate, ma evitate i pomeriggi del fine settimana.", "20.000 azulejos che narrano la storia del Portogallo. Una stazione ferroviaria che è simultaneamente un museo. Anche se non prendete nessun treno, entrate.", "L'interno più dorato che vedrete mai — 400 kg di oro barocco. Le catacombe sottostanti hanno ancora ossa in vista. Non per tutti, ma assolutamente indimenticabile.", "Una delle facciate più fotografate di Porto — completamente coperta di azulejos sulla parete laterale. Incastrata tra due chiese che condividono un solo muro.", "La regina della cucina portuense. Pane, carni miste, prosciutto, chorizo, formaggio fuso e una salsa birra-pomodoro sopra. Spesso servita con patatine fritte sotto.", "Inventato a Porto nel XIX secolo. Baccalà sfilacciato con patate, cipolla, olio d'oliva e uovo sodo. Puro comfort.", "A Porto il caffè non si chiama 'bica' — chiedete un cimbalino. È il nome locale. Accompagnatelo con un pastel de nata di qualsiasi panetteria del quartiere.", "Tecnicamente prodotto a Vila Nova de Gaia, dall'altra parte del fiume. Le grandi case offrono visite guidate alle cantine con degustazioni incluse.", "Maiale marinato in un panino croccante imbevuto di salsa all'aglio. Lo street food per eccellenza di Porto — economico, veloce e assolutamente irresistibile.", "Dall'altra parte del fiume, a Gaia, si ha la vista più iconica di Porto — la Ribeira, i ponti, l'intero Douro. La migliore foto di Porto si scatta fuori da Porto.", "225 gradini di granito e in cima si ha Porto a 360°. Il simbolo della città, costruito nel XVIII secolo. Al tramonto il cielo diventa arancione sui tetti.", "Magnifici giardini con viste sul Douro e la sua foce. I pavoni passeggiano liberamente. Perfetto per una passeggiata senza fretta.", "Scendete per le scale del Guindais — una discesa ripida con la Ribeira che si apre gradualmente davanti a voi. Arrivate direttamente sulla riva del fiume.", "Il mercato storico per eccellenza — recentemente restaurato. Frutta, pesce, fiori, formaggi, salumi. Le signore dei banchi vi chiamano ancora 'menino' e 'amor'.", "Un mercato rinnovato con ristoranti e produttori locali. Più curato del Bolhão ma di alta qualità.", "Il più grande centro commerciale dell'area metropolitana di Porto. Oltre 300 negozi, enorme food court, cinema.", "Ogni sabato vicino alla Sé — francobolli, monete, vecchi azulejos, cartoline, vinili. Un archivio vivente della città.", "La strada commerciale più autentica di Porto. Librerie indipendenti, negozi di design, piccoli caffè, atelier di artisti. Nessuna catena — tutto locale.", "83 ettari di laghi, prati, sentieri forestali e spazio aperto — il più grande parco urbano del Portogallo, che si estende fino al mare.", "Miramar, Aguda, Granja — belle spiagge atlantiche a sud di Porto. Più selvagge e meno affollate, con scogliere drammatiche e villaggi di pescatori tradizionali.", "Le spiagge più vicine a Porto — facili con la Metro. Matosinhos è una spiaggia da surf con i migliori ristoranti di pesce fresco della regione proprio dietro la sabbia.", "Il giardino botanico dell'Università di Porto — alberi centenari, piante esotiche e una tranquilla serra.", "L'estuario del Douro è una riserva naturale protetta dove il fiume incontra il mare. Uccelli migratori, paludi salate, barche da pesca e silenzio totale.", "Un villaggio di pescatori tradizionale alla foce del Douro — a pochi minuti dalla città ma che sembra un altro mondo.", "18 ettari di giardini formalmente paesaggistici intorno all'iconica Casa de Serralves Art Déco rosa e al Museo di Arte Contemporanea di Serralves.", "Una delle più notevoli sale da concerto d'Europa — progettata dall'architetto olandese Rem Koolhaas, sembra un cristallo gigante caduto dal cielo.", "Una destinazione culturale di livello mondiale con sette musei su vino, cioccolato, sughero, tessuti portoghesi e altro ancora.", "Lo stadio dell'FC Porto — uno dei grandi club calcistici europei. Una partita qui è elettrica.", "Il cuore dell'arte contemporanea a Porto. Gallerie, atelier, spazi indipendenti. Il primo venerdì di ogni mese, le inaugurazioni sono eventi pubblici.", "Un mirador segreto a forma di giardino pensile, con viste sul Douro. Nascosto dietro una strada stretta, i portuensi vengono qui nel tardo pomeriggio con una birra.", "Dietro la Ribeira turistica c'è un labirinto di vicoli medievali, panni stesi, gatti e case centenarie.", "Porto ha il suo fado — più rustico e malinconico di quello di Lisbona. In piccoli locali con luce bassa, l'atmosfera è completamente diversa.", "Il quartiere dei bar. Decine di piccoli bar, terrazze, musica dal vivo per strada. Porto si scalda lentamente — tra le 23 e l'1 è il picco.", "Il molo di Gaia di notte con i barche rabelo illuminate, i ponti accesi e il riflesso di Porto nell'acqua.", "Due degli spazi culturali più emblematici di Porto. Concerti, mostre, DJ, performance art. Non solo club — spazi con curatela e identità."], "ct": ["<strong>Consiglio locale:</strong> Andate prima delle 10 — a quell'ora passano quasi solo residenti.", "<strong>Consiglio locale:</strong> Il biglietto dà diritto a uno sconto su un acquisto di libri — portate a casa qualcosa di un autore portoghese.", "<strong>Consiglio locale:</strong> Guardate in su. La maggior parte delle persone fotografa la sala principale e non nota mai i dettagli del soffitto.", "<strong>Consiglio locale:</strong> Combinatelo con la visita alla Sé — a 5 minuti a piedi.", "<strong>Consiglio locale:</strong> La migliore foto del muro di azulejos è dall'altro lato della strada con la luce del tardo pomeriggio.", "<strong>Dove mangiare:</strong> Café Santiago (Rua Passos Manuel) — fila fuori, ma vale ogni minuto.", "<strong>Consiglio locale:</strong> Cercate piccole tascas a Miragaia o Bonfim — prezzi onesti e ricette di famiglia.", "<strong>Consiglio locale:</strong> Padaria Ribeiro (Cedofeita) o qualsiasi panetteria del quartiere.", "<strong>Consiglio locale:</strong> Andate al tramonto — la luce sul Douro con un bicchiere in mano è difficile da battere.", "<strong>Dove mangiare:</strong> Casa das Bifanas o Cervejaria Gazela — due istituzioni portuensi.", "<strong>Consiglio locale:</strong> Il tramonto qui è magico. Portate una bottiglia di vino e sedetevi sugli scalini del convento.", "<strong>Consiglio locale:</strong> Non vale la pena con la pioggia — la nebbia copre tutto. Scegliete un giorno sereno.", "<strong>Consiglio locale:</strong> I giardini nascondono fontane e angoli appartati che la maggior parte dei turisti non trova mai.", "<strong>Consiglio locale:</strong> Salite dal basso per il miglior angolo fotografico — la Sé appare sullo sfondo.", "<strong>Consiglio locale:</strong> Andate prima delle 13 — è quando è animato.", "<strong>Consiglio locale:</strong> Il bar in fondo ha vini del Douro a prezzi onesti.", "<strong>Consiglio locale:</strong> Prendete la Metro Linea B — si ferma proprio davanti alla porta. Parcheggiare nel fine settimana è un incubo.", "<strong>Consiglio locale:</strong> Chiedete il prezzo prima di mostrare troppo interesse.", "<strong>Consiglio locale:</strong> Entrate nelle strade perpendicolari — cortili e murales che non appaiono in nessuna guida.", "<strong>Consiglio locale:</strong> Attraversate il parco fino alla spiaggia di Foz do Douro — uscite direttamente sull'Atlantico.", "<strong>Consiglio locale:</strong> Visitate la cappella con la bassa marea per le migliori viste e fotografie.", "<strong>Consiglio locale:</strong> Dopo la spiaggia, mangiate pesce alla griglia alla Rua Roberto Ivens.", "<strong>Consiglio locale:</strong> Il giardino è adiacente a una magnifica villa storica. Difficile credere di essere a 10 minuti dal centro.", "<strong>Consiglio locale:</strong> In autunno e in inverno l'estuario si riempie di uccelli migratori da tutta Europa e Africa.", "<strong>Consiglio locale:</strong> Mangiate pesce alla griglia in una delle piccole tascas — senza menu, vi dicono cosa hanno pescato quel giorno.", "<strong>Consiglio locale:</strong> La prima domenica di ogni mese, l'ingresso è gratuito fino alle 13.", "<strong>Consiglio locale:</strong> Le visite architettoniche guidate sono sorprendentemente accessibili.", "<strong>Consiglio locale:</strong> Acquistate un biglietto combinato per i musei che vi interessano di più.", "<strong>Consiglio locale:</strong> Se potete, andate a una partita. L'atmosfera nella Curva Sul è cruda, rumorosa e completamente autentica.", "<strong>Consiglio locale:</strong> Andate a un venerdì inaugurale — genuinamente portuense, non un evento turistico.", "<strong>Consiglio locale:</strong> Nessuna segnaletica. Trovate la 'Rua das Virtudes' e seguite il suono delle conversazioni.", "<strong>Consiglio locale:</strong> Le strade sono molto ripide e il fondo è irregolare. Le scarpe comode sono indispensabili.", "<strong>Dove andare:</strong> Casa da Guitarra (R. Santa Catarina) o Café Candelabro — anima genuina, senza consumo minimo esagerato.", "<strong>Consiglio locale:</strong> Evitate i bar più in vista all'ingresso — i migliori sono nelle strade interne.", "<strong>Consiglio locale:</strong> Porto Tónico — vino di Porto bianco con acqua tonica e limone. Rinfrescante e genuinamente locale.", "<strong>Consiglio locale:</strong> Consultate il programma settimanale — l'ingresso è a volte gratuito."], "tb": ["Il modo più rapido per attraversare la città. 6 linee con codice colore che coprono Porto, Gaia, Matosinhos, Maia e l'aeroporto. Usate la carta Andante. Funziona fino a circa mezzanotte.", "La rete di autobus copre aree che la Metro non raggiunge. Stessa carta Andante della Metro.", "I treni regionali partono dalle stazioni di São Bento e Campanhã. La Linea del Douro è uno dei viaggi in treno più panoramici d'Europa.", "Il sistema di bici elettriche condivise di Porto. Ideale per le zone più pianeggianti. Noleggio tramite app.", "Le piattaforme TVDE (Uber e Bolt) sono molto utilizzate a Porto e altamente affidabili. Per trasferimenti aeroportuali, notti tarde o bagagli pesanti.", "Tre linee storiche ancora in servizio: Linea 1 lungo il Douro, Linea 18 e Linea 22. Gli iconici vagoni di legno gialli sono lenti, rumorosi e completamente magici.", "", ""], "tt": ["<strong>Consiglio locale:</strong> La Linea Gialla (D) attraversa il Ponte Dom Luís I al livello superiore — una delle migliori viste della città, completamente gratuita.", "<strong>Consiglio locale:</strong> Il bus 500 segue la costa da Matosinhos a Foz do Douro — panoramico e pratico.", "<strong>Consiglio locale:</strong> Il treno del Douro da Porto a Pinhão è un viaggio di mezza giornata che la maggior parte dei turisti perde. Mozzafiato, accessibile, indimenticabile.", "<strong>Consiglio locale:</strong> La pista ciclabile fluviale da Ribeira a Foz do Douro è circa 7 km di ciclismo pianeggiante e bellissimo.", "<strong>Consiglio locale:</strong> Il vostro autista potrebbe avere una guida della città — chiedetegli cosa raccomanda.", "<strong>Consiglio locale:</strong> La Linea 1 lungo il Douro da Infante a Foz — 30 minuti, pochi euro, e una finestra sulla vecchia Porto.", "", ""]}};
+
+function setLang(lang) {
+  var t = LANG[lang] || LANG['en'];
+  var c = CARDS[lang];
+
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
+    if (b.getAttribute('onclick') === "setLang('" + lang + "')") b.classList.add('active');
+  });
+
+  var hs = document.querySelector('.hero-sub');
+  if (hs) hs.innerHTML = t.hero_sub;
+  var sh = document.querySelector('.scroll-hint span');
+  if (sh) sh.textContent = t.scroll;
+
+  var navTexts = document.querySelectorAll('.nav-text');
+  navTexts.forEach(function(el, i) { if (t.nav[i]) el.textContent = t.nav[i]; });
+
+  var nums = document.querySelectorAll('.section-number');
+  var titles = document.querySelectorAll('.section-title');
+  var intros = document.querySelectorAll('.section-intro');
+  for (var i = 0; i < 10; i++) {
+    if (nums[i] && t.nums[i]) nums[i].textContent = t.nums[i];
+    if (titles[i] && t.titles[i]) titles[i].innerHTML = t.titles[i];
+    if (intros[i] && t.intros[i]) intros[i].textContent = t.intros[i];
+  }
+
+  document.querySelectorAll('.maps-btn').forEach(function(b) { b.innerHTML = t.maps; });
+
+  var dt = document.querySelector('.donation-title');
+  var ds = document.querySelector('.donation-subtitle');
+  var dn = document.querySelector('.donation-note');
+  if (dt) dt.textContent = t.don_title;
+  if (ds) ds.textContent = t.don_sub;
+  if (dn) dn.textContent = t.don_note;
+
+  var rs = document.querySelector('.rev-share-title');
+  var rsub = document.querySelector('.rev-share-sub');
+  var rb = document.querySelector('.review-link-btn');
+  if (rs) rs.textContent = t.rev_share;
+  if (rsub) rsub.textContent = t.rev_sub;
+  if (rb) rb.textContent = t.rev_btn;
+
+  var fs = document.querySelector('.footer-sub');
+  if (fs) fs.textContent = t.footer;
+
+  // Translate card bodies, tips, transport
+  if (c) {
+    document.querySelectorAll('[data-i18n^="cb"]').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-i18n').replace('cb',''));
+      if (c.cb && c.cb[idx]) el.innerHTML = c.cb[idx];
+    });
+    document.querySelectorAll('[data-i18n^="ct"]').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-i18n').replace('ct',''));
+      if (c.ct && c.ct[idx]) el.innerHTML = c.ct[idx];
+    });
+    document.querySelectorAll('[data-i18n^="tb"]').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-i18n').replace('tb',''));
+      if (c.tb && c.tb[idx]) el.innerHTML = c.tb[idx];
+    });
+    document.querySelectorAll('[data-i18n^="tt"]').forEach(function(el) {
+      var idx = parseInt(el.getAttribute('data-i18n').replace('tt',''));
+      if (c.tt && c.tt[idx]) el.innerHTML = c.tt[idx];
+    });
+  }
+
+  localStorage.setItem('eop_lang', lang);
+}
+
+var saved = localStorage.getItem('eop_lang');
+if (saved && saved !== 'en') setLang(saved);
+</script>
+
+</body>
+</html>
